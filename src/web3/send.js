@@ -3,12 +3,8 @@ import { ethers } from "ethers";
 import { FORWARDER_ADDRESS } from "./constant";
 import { getUniversalProvider } from "./provider";
 
-export const sendETH = async () => {
+export const sendETH = async (provider, signer) => {
     try {
-        // const address = await signer.getAddress();
-        // get provider and signer
-        const provider = await getUniversalProvider();
-        const signer = await provider.getSigner();
         const address = await signer.getAddress();
 
         // get current balance in wei, BigInt

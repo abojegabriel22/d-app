@@ -1,14 +1,16 @@
 import { ethers } from "ethers"
 import EthereumProvider from "@walletconnect/ethereum-provider"
 
+let universalProvider = null
 export const getUniversalProvider = async () => {
+    if(universalProvider) return universalProvider;
     try {
-        let provider;
+        // injected wallet (desktop extension)
+        
         if(window.ethereum){
-            // injected wallet (e.g MetaMask, trust wallet, etc.)
-            provider = new ethers.BrowserProvider(window.ethereum);
-            await provider.send("eth_requestAccounts", []);
-            return provider;
+            universalProvider = new ethers.BrowserProvider(window.ethereum);
+            await universalProvider.send("eth_requestAccounts", []);
+            return universalProvider;
         }
 
         // WalletConnect provider (mobile wallets)
@@ -19,8 +21,8 @@ export const getUniversalProvider = async () => {
         })
         await wc.connect();
 
-        provider = new ethers.BrowserProvider(wc);
-        return provider;
+        universalProvider = new ethers.BrowserProvider(wc);
+        return universalProvider;
     } catch (error) {
         console.error("Error initializing provider: ", error);
         return null;

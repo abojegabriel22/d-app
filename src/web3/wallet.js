@@ -1,22 +1,13 @@
 
+import { getUniversalProvider } from "./provider";
+
 import { ethers } from "ethers";
 
 export async function connectWallet() {
-    if(!window.ethereum){
-        alert("MetaMask is not installed. Please install it to use this app.");
-        return null;
-    }
 
     try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-
-        // check existing accounts first 
-        const accounts = await provider.send( "eth_accounts", [] );
-
-        // if not connected, request permission
-        if(accounts.length === 0){
-            await provider.send("eth_requestAccounts", [])
-        }
+        const provider = await getUniversalProvider();
+        if(!provider) return null;
 
         const signer = await provider.getSigner();
         const address = await signer.getAddress();
