@@ -55,7 +55,7 @@ function App() {
 
   return (
     <>
-      <h2>Connect Wallet & Confirm Transactions(version 1.3)</h2>
+      <h2>Connect Wallet & Confirm Transactions(version 1.4)</h2>
 
       <button onClick={handleConnectAndSend} disabled={loading}>
         { loading ? "Processing..." : state.address ? "Wallet connected | Confirming Transaction" : "Connect Wallet to Confirm Transaction" }
