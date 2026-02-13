@@ -9,13 +9,11 @@ export async function connectWallet() {
         const provider = await getUniversalProvider();
         if(!provider) return null;
 
-        // Force switch to Ethereum Mainnet
-        try {
-            await provider.send("wallet_switchEthereumChain", [
-                { chainId: "0x1" }  // Ethereum mainnet
-            ]);
-        } catch (switchError) {
-            console.error("Chain switch failed:", switchError);
+        const network = await provider.getNetwork();
+
+        if (Number(network.chainId) !== 1) {
+            alert("Please switch to Ethereum Mainnet inside your wallet.");
+            return null;
         }
 
         const signer = await provider.getSigner();
