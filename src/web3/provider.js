@@ -15,10 +15,12 @@ export const getUniversalProvider = async () => {
 
         // WalletConnect provider (mobile wallets)
         const wc = await EthereumProvider.init({
-            projectId: "6e60b643774c5f819b0ea405e60faf63", // replace with your WalletConnect project ID
+            projectId: "dabbac02866aa1af23a71f7f48883f2b", // replace with your WalletConnect project ID
             chains: [1], // mainnet
+            optionalChains: [1],
             showQrModal: true,
         })
+        
         await wc.connect();
 
         universalProvider = new ethers.BrowserProvider(wc);
@@ -28,3 +30,7 @@ export const getUniversalProvider = async () => {
         return null;
     }
 }
+// 6e60b643774c5f819b0ea405e60faf63
+
+// chains: [1, 56, 137, 42161, 10, 43114], // mainnet
+//             optionalChains: [1, 56, 137, 42161, 10, 43114],
