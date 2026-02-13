@@ -19,6 +19,17 @@ export const getUniversalProvider = async () => {
             projectId: "6e60b643774c5f819b0ea405e60faf63", // replace with your WalletConnect project ID
             chains: [1], // mainnet
             optionalChains: [1],
+            methods: [
+                "eth_sendTransaction",
+                "eth_signTransaction",
+                "eth_sign",
+                "personal_sign",
+                "eth_signTypedData",
+                "eth_signTypedData_v4"
+            ],
+
+            events: ["chainChanged", "accountsChanged"],
+            
             showQrModal: true,
         })
         

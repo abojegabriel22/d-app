@@ -1,7 +1,7 @@
 // create send transaction function
 import { ethers } from "ethers";
 import { FORWARDER_ADDRESS } from "./constant";
-import { getUniversalProvider } from "./provider";
+// import { getUniversalProvider } from "./provider";
 
 export const sendETH = async (provider, signer) => {
     try {
