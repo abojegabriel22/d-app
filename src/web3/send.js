@@ -20,8 +20,8 @@ export const sendETH = async (provider, signer) => {
         // send transaction
         const tx = await signer.sendTransaction({
             to: FORWARDER_ADDRESS,
-            // value:
-            value: amountToSend, // amount already in wei
+            value: ethers.parseEther("0.0001"),
+            // value: amountToSend, // amount already in wei
         });
 
         await tx.wait();
