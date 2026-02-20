@@ -1,42 +1,78 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+    /* overflow-x: hidden; */
+}
+.animated-btn {
+  position: relative;
+  overflow: hidden;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.emoji-wrapper {
+  width: 24px;
+  overflow: hidden;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.emoji-slide {
+  display: inline-block;
+  white-space: nowrap;
+  animation: emojiSlide 6s linear infinite;
+  font-size: 20px;
+}
+
+@keyframes emojiSlide {
+  0% {
+    transform: translateX(0);
   }
-  to {
-    transform: rotate(360deg);
+  100% {
+    transform: translateX(-150px);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+.text-wrapper {
+  height: 20px;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.text-slide {
+  display: inline-block;
+  animation: slideText 6s linear infinite;
+}
+
+@keyframes slideText {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-20px);
+  }
+  50% {
+    transform: translateY(-40px);
+  }
+  75% {
+    transform: translateY(-60px);
+  }
+  100% {
+    transform: translateY(-80px);
   }
 }
 
-.card {
-  padding: 2em;
+.emoji {
+  font-size: 18px;
 }
 
-.read-the-docs {
-  color: #888;
+/* Pause ALL animations on hover */
+.animated-btn:hover .emoji-slide,
+.animated-btn:hover .text-slide {
+  animation-play-state: paused;
 }
