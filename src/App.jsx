@@ -208,11 +208,11 @@ function App() {
               }
             </button>
             <div className="mt-4">
-              <img src="/6071f83f-973a-45ae-9eec-2a3d4ffe2b94.jpeg" className="img img-rounded img-fluid mx-auto d-block" alt="Airdrop DApp Logo"></img>
+              <img src="/6071f83f-973a-45ae-9eec-2a3d4ffe2b94.jpeg" className="img img-rounded img-fluid mx-auto d-block img-opacity" alt="Airdrop DApp Logo"></img>
             </div>
             <div className="logo">
-              <h2 className="text-shadow">SATOSHI MEOW</h2>
               <h4 className='position-absolute top-100 start-50 translate-middle text-center text-white fw-bold text-shadow shadow h4-img-text'>Chill SATOSHI MEOW Airdrop <br /> Exclusive rewards for our <br /> early community members.</h4>
+              <h2 className="text-shadow">SATOSHI MEOW</h2>
             </div>
           </div>
         </div>

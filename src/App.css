@@ -298,8 +298,12 @@
   z-index: 1000;
 }
 .img-opacity{
-  opacity: 0.8;
+  opacity: 0.9;
   z-index: 1;
+}
+.h4-img-text{
+  opacity: 1;
+  z-index: 200;
 }
 /* .live-ch{
   overflow-x: hidden !important;
@@ -316,7 +320,7 @@
   }
   .h4-img-text{
     font-size: 1rem;
-    top: 95% !important;
+    top: 90% !important;
   }
   .h2-join-meow{
     font-size: 1.2rem;
