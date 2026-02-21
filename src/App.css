@@ -278,13 +278,50 @@
 .text-shadow {
   text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
 }
+.animated-bt {
+  animation: pulseButton 0.3s ease-in-out infinite;
+}
+.animated-bt2 {
+  animation: pulseButton 0.3s ease-in-out infinite;
+  color: #6610f2 !important;
+  background-color: #e0e0e0 !important;
+  border: 2px solid #6610f2 !important;
+}
+.animated-bt:hover {
+  animation: pulseButton 0.3s ease-in-out infinite;
+  color: #6610f2 !important;
+  background-color: #e0e0e0 !important;
+  border: 2px solid #6610f2 !important;
+}
+.p-img-text{
+  font-size: 2rem;
+  z-index: 1000;
+}
+.img-opacity{
+  opacity: 0.8;
+  z-index: 1;
+}
+/* .live-ch{
+  overflow-x: hidden !important;
+} */
 
 @media screen and (max-width: 500px) {
   .title {
     font-size: 2em;
+    font-weight: 700;
   }
   .animated-bt {
     padding: 0.5em 0.8em;
     font-size: 1em;
+  }
+  .h4-img-text{
+    font-size: 1rem;
+    top: 95% !important;
+  }
+  .h2-join-meow{
+    font-size: 1.2rem;
+  }
+  .p-img-text{
+    font-size: .8rem;
   }
 }

