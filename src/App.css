@@ -7,6 +7,7 @@
     scroll-behavior: smooth;
     /* overflow-x: hidden; */
 }
+
 .animated-btn {
   position: relative;
   overflow: hidden;
@@ -75,4 +76,215 @@
 .animated-btn:hover .emoji-slide,
 .animated-btn:hover .text-slide {
   animation-play-state: paused;
+}
+
+/* .nav-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 100%);
+  animation: waveAnimation 4s linear infinite;
+} */
+ .container-fluid {
+  position: relative;
+  z-index: 2;
+}
+ .wave-nav {
+  position: relative;
+  overflow: hidden;
+}
+
+/* // this creates a glowy moving wave  */
+.nav-wave {
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(8px);
+
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(0, 255, 170, 0.15) 20%,
+    rgba(0, 200, 255, 0.25) 40%,
+    rgba(0, 255, 170, 0.15) 60%,
+    transparent 80%
+  );
+  /* background: linear-gradient(
+  120deg,
+  transparent,
+  rgba(0,255,255,0.2),
+  rgba(0,128,255,0.3),
+  rgba(0,255,255,0.2),
+  transparent
+); */
+
+  animation: waveMove 6s linear infinite;
+}
+
+@keyframes waveMove {
+  0% {
+    transform: translateX(-25%) skewX(-10deg);
+  }
+  50% {
+    transform: translateX(25%) skewX(10deg);
+  }
+  100% {
+    transform: translateX(-25%) skewX(-10deg);
+  }
+}
+
+.nav-wave::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0,255,200,0.25),
+    transparent 70%
+  );
+  animation: pulseWave 4s ease-in-out infinite;
+}
+
+@keyframes pulseWave {
+  0% {
+    opacity: 0.4;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scaleX(1.2);
+  }
+  100% {
+    opacity: 0.4;
+    transform: scaleX(1);
+  }
+}
+
+/* Crypto style line wave */
+/* .line-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+} */
+
+/* The moving line */
+/* .wave-line {
+  fill: none;
+  stroke: rgba(0, 255, 200, 0.8);
+  stroke-width: 2;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 0;
+  animation: cryptoWave 4s linear infinite;
+} */
+
+/* Movement animation */
+/* @keyframes cryptoWave {
+  0% {
+    transform: translateX(0);
+    stroke-dashoffset: 0;
+  }
+  100% {
+    transform: translateX(-50%);
+    stroke-dashoffset: 200;
+  }
+} */
+ /* Crypto style line wave */
+.line-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  z-index: 3; /* Bring above glow */
+  pointer-events: none;
+}
+
+/* The moving line */
+.wave-line {
+  fill: none;
+
+  /* Stronger color */
+  stroke: #00ffd0;
+
+  /* Thicker line */
+  stroke-width: 4;
+
+  /* Makes the wave continuous */
+  stroke-dasharray: 40;
+  stroke-dashoffset: 0;
+
+  /* Glow effect */
+  filter: drop-shadow(0 0 6px #66ff00)
+          drop-shadow(0 0 12px #2063d6)
+          drop-shadow(0 0 18px #006aff);
+
+  animation: cryptoWave 3s linear infinite;
+}
+
+/* Movement animation */
+@keyframes cryptoWave {
+  0% {
+    transform: translateX(0);
+    stroke-dashoffset: 0;
+  }
+  100% {
+    transform: translateX(-50%);
+    stroke-dashoffset: 300;
+  }
+}
+
+
+.container-center {
+  margin: 0 auto;
+}
+
+.shake-letter {
+  display: inline-block;
+  animation: shakeRotate 1s infinite;
+  transform-origin: center center;
+}
+
+/* Add some random delays so letters are not synchronized */
+.shake-letter:nth-child(1) { animation-delay: 0s; }
+.shake-letter:nth-child(2) { animation-delay: 0.05s; }
+.shake-letter:nth-child(3) { animation-delay: 0.1s; }
+.shake-letter:nth-child(4) { animation-delay: 0.15s; }
+/* repeat for as many letters as you have */
+
+@keyframes shakeRotate {
+  0%   { transform: rotate(0deg) translate(0,0); }
+  10%  { transform: rotate(-10deg) translate(-2px,2px); }
+  20%  { transform: rotate(10deg) translate(2px,-2px); }
+  30%  { transform: rotate(-8deg) translate(-1px,1px); }
+  40%  { transform: rotate(8deg) translate(1px,-1px); }
+  50%  { transform: rotate(0deg) translate(0,0); }
+  60%  { transform: rotate(6deg) translate(1px,1px); }
+  70%  { transform: rotate(-6deg) translate(-1px,-1px); }
+  80%  { transform: rotate(4deg) translate(1px,-1px); }
+  90%  { transform: rotate(-4deg) translate(-1px,1px); }
+  100% { transform: rotate(0deg) translate(0,0); }
+}
+.text-shadow {
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+}
+
+@media screen and (max-width: 500px) {
+  .title {
+    font-size: 2em;
+  }
+  .animated-bt {
+    padding: 0.5em 0.8em;
+    font-size: 1em;
+  }
 }
