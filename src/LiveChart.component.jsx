@@ -32,8 +32,13 @@ const LiveChartComponent = () => {
     <>
       <section>
         <div className="container liveChartContainer overflow-x-hidden">
-          <div className="livChartHeading">
-            <h1 className="text-center py-5 underline">View Live Chart</h1>
+          <div className="livChartHeading overflow-x-hidden">
+            <div className="headline-container">
+              <p className="headline-text">
+                🚀 Live Crypto Charts – Track real-time prices, market movements,
+                trading signals, and 7-day trends across the cryptocurrency market.
+              </p>
+            </div>
           </div>
           <div className="table-responsive liveChart d-none d-md-block">
             <table className="table table-hover table-bordered text-center align-middle responsive-text">
