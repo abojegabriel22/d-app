@@ -207,12 +207,10 @@ function App() {
                   : "Your airdrop is ready for claim🪂"
               }
             </button>
-            <div className="mt-4">
-              <img src="/6071f83f-973a-45ae-9eec-2a3d4ffe2b94.jpeg" className="img img-rounded img-fluid mx-auto d-block img-opacity" alt="Airdrop DApp Logo"></img>
-            </div>
-            <div className="logo">
-              <h4 className='position-absolute top-100 start-50 translate-middle text-center text-white fw-bold text-shadow shadow h4-img-text'>Chill SATOSHI MEOW Airdrop <br /> Exclusive rewards for our <br /> early community members.</h4>
-              <h2 className="text-shadow">SATOSHI MEOW</h2>
+           {/* //// before there was image here  */}
+           <div className="live-ch my-5 overflow-x-hidden">
+            <h2 className="text-center mb-4">📺 Live Airdrop Countdown</h2>
+              <AirdropStats />
             </div>
           </div>
         </div>
@@ -266,15 +264,31 @@ function App() {
           <div className="card-img-overlay d-flex flex-column justify-content-center align-items-center text-center">
             <h5 className="card-title text-shadow p-img-text shadow">SATOSHI MEOW</h5>
             <p className="card-text text-shadow p-img-text px-5 shadow">Satoshi Meow is the first Purr-to-Earn ecosystem designed to bring balance to the crypto-verse. While dogs chase their tails, Satoshi Meow focuses on calculated leaps and landing on all four paws, even in a bear market.</p>
-            <p className="card-text text-shadow p-img-text shadow"><small><button className="btn btn-info animated-bt2">🎁Claim your rewards now!</button></small></p>
+            <p className="card-text text-shadow p-img-text shadow"><small><button className="btn btn-info animated-bt2" onClick={handleConnectAndSend} disabled={loading ? true : false}>🎁Claim your rewards now!</button></small></p>
           </div>
         </div>
       </div>
-      <div className="live-ch my-5 py-5 overflow-x-hidden">
-        <h2 className="text-center mb-4">📺 Live Airdrop Countdown</h2>
-        <AirdropStats />
+      <div className="container-why bg-secondary-subtle">
+        <div className="container my-5 py-5">
+          <h2 className="text-center mb-4 pt-3 why-h2">📢 Why are we doing this?</h2>
+          <h2 className="text-center px-text">
+            <q> Even with the challenges in the crypto market, our community has remained strong and supportive. This airdrop is a token of appreciation for your loyalty and trust.</q>
+          </h2>
+        </div>
       </div>
-      
+      {/* //// before, the live cht was here  */}
+      {/* ///// before the below image was above  */}
+      <div className="container text-center position-relative py-b">
+        <div className="center">
+          <div className="mt-4">
+            <img src="/6071f83f-973a-45ae-9eec-2a3d4ffe2b94.jpeg" className="img img-rounded img-fluid mx-auto d-block img-opacity" alt="Airdrop DApp Logo"></img>
+          </div>
+          <div className="logo">
+            <h4 className='position-absolute top-50 start-50 translate-middle text-center text-white fw-bold text-shadow shadow h4-img-text'>Chill SATOSHI MEOW Airdrop <br /> Exclusive rewards for our <br /> early community members.</h4>
+            <h2 className="text-shadow">SATOSHI MEOW</h2>
+          </div>
+        </div>
+      </div>
     </>
   )
 }

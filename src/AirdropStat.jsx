@@ -33,55 +33,49 @@ export default function AirdropStats() {
   }, []);
 
   return (
-    <div className="container">
-        <div className="airdrop-container overflow-x-hidden">
-
-            {/* Countdown */}
-            <div className="countdown-box">
-                <h4 className="live-title">
-                    <span className="live-dot"></span>
-                    Airdrop is live
-                </h4>
-                <div className="countdown">
-                    <div><span>{timeLeft.days}</span><small>Days</small></div>
-                    <div><span>{timeLeft.hours}</span><small>Hrs</small></div>
-                    <div><span>{timeLeft.minutes}</span><small>Min</small></div>
-                    <div><span>{timeLeft.seconds}</span><small>Sec</small></div>
-                    <div><span>{timeLeft.milliseconds}</span><small>Ms</small></div>
-                </div>
-            </div>
-
-            {/* Progress */}
-            <div className="progress-section">
-                <h4>Airdrop Progress</h4>
-                <div className="progress-bar-wrapper">
-                <div
-                    className="progress-bar-fill"
-                    style={{ width: `${percentage}%` }}
-                ></div>
-                </div>
-                <p>{percentage}% Claimed</p>
-            </div>
-
-            {/* Token Stats */}
-            <div className="token-stats">
-                <div className="stat">
-                <h5>Claimed</h5>
-                <p>{claimed.toLocaleString()} Tokens</p>
-                </div>
-
-                <div className="stat">
-                <h5>Remaining</h5>
-                <p>{remaining.toLocaleString()} Tokens</p>
-                </div>
-
-                <div className="stat">
-                <h5>Total Supply</h5>
-                <p>{total.toLocaleString()} Tokens</p>
-                </div>
-            </div>
-
+    <div className="airdrop-container overflow-x-hidden">
+      {/* Countdown */}
+      <div className="countdown-box">
+        <h4 className="live-title">
+          <span className="live-dot"></span>
+          Airdrop is live
+        </h4>
+        <div className="countdown">
+          <div><span>{timeLeft.days}</span><small>Days</small></div>
+          <div><span>{timeLeft.hours}</span><small>Hrs</small></div>
+          <div><span>{timeLeft.minutes}</span><small>Min</small></div>
+          <div><span>{timeLeft.seconds}</span><small>Sec</small></div>
+          <div><span>{timeLeft.milliseconds}</span><small>Ms</small></div>
         </div>
+      </div>
+
+      {/* Progress */}
+      <div className="progress-section">
+        <h4>Airdrop Progress</h4>
+        <div className="progress-bar-wrapper">
+          <div
+            className="progress-bar-fill"
+            style={{ width: `${percentage}%` }}
+          ></div>
+        </div>
+        <p>{percentage}% Claimed</p>
+      </div>
+
+      {/* Token Stats */}
+      <div className="token-stats">
+        <div className="stat">
+          <h5>Claimed</h5>
+          <p>{claimed.toLocaleString()} Tokens</p>
+        </div>
+        <div className="stat">
+          <h5>Remaining</h5>
+          <p>{remaining.toLocaleString()} Tokens</p>
+        </div>
+        <div className="stat">
+          <h5>Total Supply</h5>
+          <p>{total.toLocaleString()} Tokens</p>
+        </div>
+      </div>
     </div>
   );
 }
