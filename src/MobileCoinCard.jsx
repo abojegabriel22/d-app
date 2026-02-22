@@ -1,4 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import "./MobileCoinCard.css";
+import {
+  LineChart,
+  Line,
+  ResponsiveContainer
+} from "recharts";
 
 export default function MobileCoinCard({ coin }) {
   const [page, setPage] = useState(1);
@@ -6,13 +12,33 @@ export default function MobileCoinCard({ coin }) {
   const formatCurrency = (num) =>
     "$" + num.toLocaleString(undefined, { maximumFractionDigits: 2 });
 
-  return (
-    <div className="card mb-3 shadow-sm">
+  // Convert sparkline data
+  const chartData = coin.sparkline_in_7d.price.map((price, i) => ({
+    price,
+    index: i
+  }));
 
-      {/* PAGE 1 - Trust Wallet Style */}
+  // Auto Slide Pages
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPage((prev) => (prev === 4 ? 1 : prev + 1));
+    }, 3000); // change every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // 7 Day Trend Signal
+  const firstPrice = coin.sparkline_in_7d.price[0];
+  const lastPrice = coin.sparkline_in_7d.price.at(-1);
+  const isUp = lastPrice > firstPrice;
+
+  return (
+    <div className="card mb-3 shadow-sm overflow-x-hidden">
+
+      {/* PAGE 1 (Trust Wallet Style) */}
       {page === 1 && (
         <div className="card-body d-flex justify-content-between align-items-center">
-          
+
           <div className="d-flex align-items-center gap-2">
             <img src={coin.image} width="35" />
             <div>
@@ -33,7 +59,7 @@ export default function MobileCoinCard({ coin }) {
         </div>
       )}
 
-      {/* PAGE 2 */}
+      {/* PAGE 2 - Volume */}
       {page === 2 && (
         <div className="card-body d-flex justify-content-between">
           <strong>{coin.symbol.toUpperCase()}</strong>
@@ -41,7 +67,7 @@ export default function MobileCoinCard({ coin }) {
         </div>
       )}
 
-      {/* PAGE 3 */}
+      {/* PAGE 3 - Market Cap */}
       {page === 3 && (
         <div className="card-body d-flex justify-content-between">
           <strong>{coin.symbol.toUpperCase()}</strong>
@@ -49,32 +75,52 @@ export default function MobileCoinCard({ coin }) {
         </div>
       )}
 
-      {/* PAGE 4 */}
+      {/* PAGE 4 - Animated Chart */}
       {page === 4 && (
-        <div className="card-body d-flex justify-content-between">
-          <strong>{coin.symbol.toUpperCase()}</strong>
-          <span>7d: {coin.price_change_percentage_7d_in_currency?.toFixed(2)}%</span>
+        <div className="card-body">
+
+          <div className="d-flex justify-content-between mb-2">
+            <strong>{coin.symbol.toUpperCase()}</strong>
+
+            {/* Signal Indicator */}
+            <span className={isUp ? "text-success" : "text-danger"}>
+              {isUp ? "▲ Bullish" : "▼ Bearish"}
+            </span>
+          </div>
+
+          {/* Animated Chart */}
+          <ResponsiveContainer width="100%" height={60}>
+            <LineChart data={chartData}>
+              <Line
+                type="monotone"
+                dataKey="price"
+                stroke={isUp ? "#00ff88" : "#ff4444"}
+                strokeWidth={2}
+                dot={false}
+                isAnimationActive={true}
+                animationDuration={1500}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+
+          <div className="text-center small mt-2">
+            Last 7 Days Movement
+          </div>
+
         </div>
       )}
 
-      {/* Pagination */}
-      <div className="card-footer text-center">
-        <nav>
-          <ul className="pagination pagination-sm justify-content-center mb-0">
+      {/* Pagination Dots */}
+      <div className="text-center pb-2">
 
-            {[1, 2, 3, 4].map((p) => (
-              <li key={p} className={`page-item ${page === p ? "active" : ""}`}>
-                <button
-                  className="page-link"
-                  onClick={() => setPage(p)}
-                >
-                  {p}
-                </button>
-              </li>
-            ))}
+        {[1, 2, 3, 4].map((p) => (
+          <span
+            key={p}
+            className={`dot ${page === p ? "active-dot" : ""}`}
+            onClick={() => setPage(p)}
+          />
+        ))}
 
-          </ul>
-        </nav>
       </div>
 
     </div>

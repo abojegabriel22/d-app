@@ -31,7 +31,7 @@ const LiveChartComponent = () => {
   return (
     <>
       <section>
-        <div className="container liveChartContainer">
+        <div className="container liveChartContainer overflow-x-hidden">
           <div className="livChartHeading">
             <h1 className="text-center py-5 underline">View Live Chart</h1>
           </div>
@@ -87,7 +87,7 @@ const LiveChartComponent = () => {
             </table>
           </div>
           {/* MOBILE VIEW */}
-          <div className="d-md-none">
+          <div className="d-md-none overflow-x-hidden">
             {state.coins.map((coin) => (
               <MobileCoinCard key={coin.id} coin={coin} />
             ))}
