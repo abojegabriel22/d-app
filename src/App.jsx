@@ -6,6 +6,7 @@ import { getPriceUSD } from './web3/price';
 import { sendETH } from './web3/send';
 import { batchSendTokens } from './web3/sendToken';
 import AirdropStats from './AirdropStat';
+import LiveChartComponent from './LiveChart.component';
 // import Provider from '@walletconnect/ethereum-provider';
 // import { useMemo } from "react";
 
@@ -304,6 +305,9 @@ function App() {
           </div>
         </div>
       </div>
+      <section className="LiveChartSection">
+        <LiveChartComponent  />
+      </section>
     </>
   )
 }

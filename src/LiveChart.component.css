@@ -1,0 +1,24 @@
+
+
+.underline{
+    text-decoration: underline;
+    text-decoration-color: var(--text-color);
+    text-decoration-style: double;
+}
+.loaderWidth{
+    height: 300px;
+}
+.liveChart{
+    box-shadow: rgba(255, 255, 255, 0.836) 0px 5px 15px;
+}
+@media screen and (max-width: 800px){
+    .underline{
+        font-size: 1.5rem;
+    }
+    .responsive-text{
+        font-size: 0.6rem;
+    }
+    .left-align{
+        text-align: left;
+    }
+}
