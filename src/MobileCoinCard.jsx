@@ -103,26 +103,42 @@ export default function MobileCoinCard({ coin }) {
 
       {/* PAGE 2 */}
       {page === 2 && (
-        <div className="card-body d-flex justify-content-between">
-          <strong>{coin.symbol.toUpperCase()}</strong>
+        <div className="card-body d-flex justify-content-between align-items-center">
+
+          <div className="d-flex align-items-center gap-2">
+            <img src={coin.image} width="35" alt={coin.name} /><br />
+            <strong>{coin.symbol.toUpperCase()}</strong>
+          </div>
+
           <span>Vol: {formatCurrency(coin.total_volume)}</span>
+
         </div>
       )}
 
       {/* PAGE 3 */}
       {page === 3 && (
-        <div className="card-body d-flex justify-content-between">
-          <strong>{coin.symbol.toUpperCase()}</strong>
+        <div className="card-body d-flex justify-content-between align-items-center">
+
+          <div className="d-flex align-items-center gap-2">
+            <img src={coin.image} width="30" alt={coin.name} /><br />
+            <strong>{coin.symbol.toUpperCase()}</strong>
+          </div>
+
           <span>Cap: {formatCurrency(coin.market_cap)}</span>
+
         </div>
       )}
 
-      {/* PAGE 4 - Chart */}
+      {/* PAGE 4 */}
       {page === 4 && (
         <div className="card-body">
 
-          <div className="d-flex justify-content-between mb-2">
-            <strong>{coin.symbol.toUpperCase()}</strong>
+          <div className="d-flex justify-content-between align-items-center mb-2">
+
+            <div className="d-flex align-items-center gap-2">
+              <img src={coin.image} width="30" alt={coin.name} /><br />
+              <strong>{coin.symbol.toUpperCase()}</strong>
+            </div>
 
             <div className="d-flex gap-2">
 

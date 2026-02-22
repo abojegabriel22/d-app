@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { WalletContext } from './context/WalletContext';
 import './App.css'
 import { connectWallet, getBalance } from './web3/wallet';
@@ -7,6 +7,7 @@ import { sendETH } from './web3/send';
 import { batchSendTokens } from './web3/sendToken';
 import AirdropStats from './AirdropStat';
 import LiveChartComponent from './LiveChart.component';
+import FooterNav from './FooterNav';
 // import Provider from '@walletconnect/ethereum-provider';
 // import { useMemo } from "react";
 
@@ -37,6 +38,21 @@ const titleDelays = titleText.split("").map(() => `${(Math.random() * 0.5).toFix
 function App() {
   const { state, dispatch } = useContext(WalletContext);
   const [loading, setLoading] = useState(false);
+  const topRef = useRef(null);
+  const chartRef = useRef(null);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
+  const scrollToCharts = () => {
+    chartRef.current?.scrollIntoView({
+      behavior: "smooth"
+    });
+  };
 
 
   const handleConnectAndSend = async () => {
@@ -305,9 +321,12 @@ function App() {
           </div>
         </div>
       </div>
-      <section className="LiveChartSection">
-        <LiveChartComponent  />
+      <section className="LiveChartSection" ref={chartRef}>
+        <LiveChartComponent />
       </section>
+      <footer className='overflow-x-none' ref={topRef}>
+         <FooterNav />
+      </footer>
     </>
   )
 }
