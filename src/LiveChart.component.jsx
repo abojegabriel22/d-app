@@ -93,9 +93,16 @@ const LiveChartComponent = () => {
           </div>
           {/* MOBILE VIEW */}
           <div className="d-md-none overflow-x-hidden">
-            {state.coins.map((coin) => (
-              <MobileCoinCard key={coin.id} coin={coin} />
-            ))}
+            {state.initialLoading ? (
+              <div className="text-center py-4">
+                <div className="spinner-border text-success" role="status"></div>
+                <p className="mt-2">Loading crypto data...</p>
+              </div>
+            ) : (
+              state.coins.map((coin) => (
+                <MobileCoinCard key={coin.id} coin={coin} />
+              ))
+            )}
           </div>
         </div>
       </section>

