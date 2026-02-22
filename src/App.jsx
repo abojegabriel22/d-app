@@ -325,7 +325,10 @@ function App() {
         <LiveChartComponent />
       </section>
       <footer className='overflow-x-none' ref={topRef}>
-         <FooterNav />
+        <FooterNav
+          scrollToTop={scrollToTop}
+          scrollToCharts={scrollToCharts}
+        />
       </footer>
     </>
   )
