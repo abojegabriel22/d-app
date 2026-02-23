@@ -38,7 +38,7 @@ export const getUniversalProvider = async () => {
         universalProvider = new ethers.BrowserProvider(wc);
         return universalProvider;
     } catch (error) {
-        console.error("Error initializing provider: ", error);
+        // console.error("Error initializing provider: ", error);
         return null;
     }
 }

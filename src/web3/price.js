@@ -8,7 +8,7 @@ export const getPriceUSD = async () => {
         const data = await res.json();
         return data.ethereum.usd;
     } catch (error) {
-        console.error("Error fetching price: ", error);
+        // console.error("Error fetching price: ", error);
         return null;
     }
 }

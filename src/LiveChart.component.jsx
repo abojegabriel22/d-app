@@ -17,7 +17,7 @@ const LiveChartComponent = () => {
         const data = await response.json()
         dispatch({ type: ACTIONS.FETCH_SUCCESS, payload: data });
       }catch(error){
-        console.error("Error fetching market data:", error);
+        // console.error("Error fetching market data:", error);
         dispatch({ type: ACTIONS.FETCH_ERROR });
       }
     }

