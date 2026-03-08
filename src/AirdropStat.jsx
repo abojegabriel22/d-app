@@ -2,34 +2,63 @@ import { useEffect, useState } from "react";
 import "./AirdropStat.css";
 
 export default function AirdropStats() {
-  const claimed = 1785600;
-  const remaining = claimed * 3;
-  const total = claimed + remaining;
-  const percentage = ((claimed / total) * 100).toFixed(2);
+  const TOTAL_SUPPLY = 7000000;
+  const [claimed, setClaimed] = useState(1785600);
+  const remaining = TOTAL_SUPPLY - claimed;
+  // const total = claimed + remaining;
+  const percentage = ((claimed / TOTAL_SUPPLY) * 100).toFixed(2);
 
-  // Set countdown date
-  const targetDate = new Date();
-  targetDate.setDate(targetDate.getDate() + 7); // 7 days from now
-
-  const [timeLeft, setTimeLeft] = useState({});
+  const [timeLeft, setTimeLeft] = useState({
+    days: 6,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  });
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date();
-      const difference = targetDate - now;
+    // Create fixed end timestamp ONCE inside effect
+    const endTime = Date.now() + 6 * 24 * 60 * 60 * 1000;
 
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-          milliseconds: Math.floor(difference % 1000),
-        });
+    function calculateTime(difference) {
+      return {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+        milliseconds: Math.floor(difference % 1000),
+      };
+    }
+
+    const timer = setInterval(() => {
+      const diff = endTime - Date.now();
+
+      if (diff <= 0) {
+        clearInterval(timer);
+        return;
       }
-    }, 10); // updates milliseconds
+
+      setTimeLeft(calculateTime(diff));
+    }, 100);
 
     return () => clearInterval(timer);
+  }, []);
+  // Random claimed increase
+  useEffect(() => {
+    const claimInterval = setInterval(() => {
+      setClaimed((prev) => {
+        if (prev >= TOTAL_SUPPLY) return TOTAL_SUPPLY;
+
+        const randomIncrease = Math.floor(Math.random() * 5000) + 1000;
+        const newValue = prev + randomIncrease;
+
+        return newValue > TOTAL_SUPPLY
+          ? TOTAL_SUPPLY
+          : newValue;
+      });
+    }, 2000); // every 2 seconds
+
+    return () => clearInterval(claimInterval);
   }, []);
 
   return (
@@ -73,7 +102,7 @@ export default function AirdropStats() {
         </div>
         <div className="stat">
           <h5>Total Supply</h5>
-          <p>{total.toLocaleString()} Tokens</p>
+          <p>{TOTAL_SUPPLY.toLocaleString()} Tokens</p>
         </div>
       </div>
     </div>
