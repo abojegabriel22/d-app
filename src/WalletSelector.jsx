@@ -26,10 +26,20 @@ export default function WalletSelector({ onConnected }) {
           </button>
         ))
       ) : (
-        <p className="text-gray-400 text-sm text-center">
-          No wallets detected. <br/>
-          <a href="https://www.xverse.app/" className="text-orange-400">Install Xverse</a> or open in a Mobile Crypto Browser.
-        </p>
+        <div className="text-center">
+          <p className="text-gray-400 text-sm mb-4">
+            No browser-injected wallets detected.
+          </p>
+          <button
+            className="px-4 py-2 bg-orange-500 hover:bg-orange-400 text-white rounded-lg"
+            onClick={() => handleConnect()}
+          >
+            Open Wallet Selector
+          </button>
+          <p className="text-gray-500 text-xs mt-2">
+            If you have Trust Wallet, MetaMask, or another mobile wallet, this will open the wallet picker.
+          </p>
+        </div>
       )}
     </div>
   );
