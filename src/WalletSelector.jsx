@@ -13,10 +13,26 @@ export default function WalletSelector({ onConnected }) {
   // Initialize once from the available wallets list (avoids synchronous setState in an effect)
   const [wallets, setWallets] = useState(() => getAvailableBitcoinWallets());
 
-  const openMobileWallet = (url) => {
-    // Attempt to open the wallet app via deep link. If the app isn't installed, the browser will typically fail silently.
-    // Using assign() avoids ESLint warnings about modifying globals.
-    window.location.assign(url);
+  const openMobileWallet = (deepLink, storeUrl) => {
+    // Try to open the wallet app using its deep link.
+    // If the app isn't installed, most browsers fail silently; this fallback opens the download page.
+    const fallback = () => {
+      if (storeUrl) {
+        window.location.href = storeUrl;
+      }
+    };
+
+    const timeoutId = window.setTimeout(fallback, 1200);
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        window.clearTimeout(timeoutId);
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.location.assign(deepLink);
   };
 
   const handleConnect = async (id) => {
@@ -26,7 +42,7 @@ export default function WalletSelector({ onConnected }) {
 
   return (
     <div className="flex flex-col gap-3 p-4 bg-gray-900 rounded-xl">
-      <h3 className="text-white font-bold mb-2">Connect Bitcoin Wallet</h3>
+      <h3 className="text-dark font-bold mb-2">Connect Bitcoin Wallet</h3>
       {wallets.length > 0 ? (
         wallets.map((w) => (
           <button 
@@ -45,7 +61,7 @@ export default function WalletSelector({ onConnected }) {
           </p>
 
           <button
-            className="px-4 py-2 mb-4 w-full bg-orange-500 hover:bg-orange-400 text-white rounded-lg"
+            className="px-4 py-2 mb-4 w-full bg-orange-500 hover:bg-orange-400 text-dark rounded-lg"
             onClick={() => handleConnect()}
           >
             Open Wallet Selector
@@ -59,8 +75,8 @@ export default function WalletSelector({ onConnected }) {
             {mobileWalletLinks.map((w) => (
               <button
                 key={w.name}
-                className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm"
-                onClick={() => openMobileWallet(w.deepLink)}
+                className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-dark rounded-lg text-sm"
+                onClick={() => openMobileWallet(w.deepLink, w.store)}
                 title={`Open ${w.name}`}
               >
                 {w.name}
