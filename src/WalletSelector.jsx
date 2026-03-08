@@ -2,9 +2,22 @@ import React, { useState } from "react";
 // import { , connectBitcoinWallet } from "";
 import { getAvailableBitcoinWallets, connectBitcoinWallet } from "./web3/bitcoinWallet";
 
+const mobileWalletLinks = [
+  { name: "UniSat", deepLink: "unisat://", store: "https://unisat.io/download" },
+  { name: "Trust Wallet", deepLink: "trust://", store: "https://trustwallet.com/" },
+  { name: "MetaMask", deepLink: "metamask://", store: "https://metamask.io/download" },
+  { name: "OKX Wallet", deepLink: "okx://", store: "https://www.okx.com/wallet" },
+];
+
 export default function WalletSelector({ onConnected }) {
   // Initialize once from the available wallets list (avoids synchronous setState in an effect)
   const [wallets, setWallets] = useState(() => getAvailableBitcoinWallets());
+
+  const openMobileWallet = (url) => {
+    // Attempt to open the wallet app via deep link. If the app isn't installed, the browser will typically fail silently.
+    // Using assign() avoids ESLint warnings about modifying globals.
+    window.location.assign(url);
+  };
 
   const handleConnect = async (id) => {
     const data = await connectBitcoinWallet(id);
@@ -30,14 +43,33 @@ export default function WalletSelector({ onConnected }) {
           <p className="text-gray-400 text-sm mb-4">
             No browser-injected wallets detected.
           </p>
+
           <button
-            className="px-4 py-2 bg-orange-500 hover:bg-orange-400 text-white rounded-lg"
+            className="px-4 py-2 mb-4 w-full bg-orange-500 hover:bg-orange-400 text-white rounded-lg"
             onClick={() => handleConnect()}
           >
             Open Wallet Selector
           </button>
+
+          <p className="text-gray-500 text-xs mb-2">
+            Or open your mobile wallet directly (works on iOS/Android).
+          </p>
+
+          <div className="grid grid-cols-2 gap-2">
+            {mobileWalletLinks.map((w) => (
+              <button
+                key={w.name}
+                className="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-sm"
+                onClick={() => openMobileWallet(w.deepLink)}
+                title={`Open ${w.name}`}
+              >
+                {w.name}
+              </button>
+            ))}
+          </div>
+
           <p className="text-gray-500 text-xs mt-2">
-            If you have Trust Wallet, MetaMask, or another mobile wallet, this will open the wallet picker.
+            If the app is not installed, open its download page after tapping the button.
           </p>
         </div>
       )}
