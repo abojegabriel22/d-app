@@ -12,6 +12,27 @@ const mobileWalletLinks = [
 export default function WalletSelector({ onConnected }) {
   // Initialize once from the available wallets list (avoids synchronous setState in an effect)
   const [wallets, setWallets] = useState(() => getAvailableBitcoinWallets());
+  const [copied, setCopied] = useState(false);
+
+  const appUrl = typeof window !== "undefined" ? window.location.href : "";
+
+  const copyDappLink = async () => {
+    try {
+      await navigator.clipboard.writeText(appUrl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2800);
+    } catch {
+      // Fallback for browsers where clipboard API is not available.
+      const temp = document.createElement("textarea");
+      temp.value = appUrl;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand("copy");
+      document.body.removeChild(temp);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2800);
+    }
+  };
 
   const openMobileWallet = (deepLink, storeUrl) => {
     // Try to open the wallet app using its deep link.
@@ -87,6 +108,23 @@ export default function WalletSelector({ onConnected }) {
           <p className="text-gray-500 text-xs mt-2">
             If the app is not installed, open its download page after tapping the button.
           </p>
+
+          <div className="mt-3">
+            <p className="text-gray-400 text-xs mb-2">
+              Or open this dapp directly inside your wallet browser (Trust / MetaMask / OKX etc.):
+            </p>
+            <div className="flex gap-2">
+              <button
+                className="px-3 py-2 flex-1 bg-gray-800 hover:bg-gray-700 text-dark rounded-lg text-sm"
+                onClick={copyDappLink}
+              >
+                {copied ? "Copied!" : "Copy dapp link"}
+              </button>
+            </div>
+            <p className="text-gray-500 text-xs mt-2">
+              Paste the link into your wallet's in-app browser to open the dapp.
+            </p>
+          </div>
         </div>
       )}
     </div>
