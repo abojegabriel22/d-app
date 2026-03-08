@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 // import { , connectBitcoinWallet } from "";
 import { getAvailableBitcoinWallets, connectBitcoinWallet } from "./web3/bitcoinWallet";
+import { getProviders } from "sats-connect";
 
 const mobileWalletLinks = [
   { 
@@ -31,8 +32,18 @@ export default function WalletSelector({ onConnected }) {
   // Initialize once from the available wallets list (avoids synchronous setState in an effect)
   const [wallets, setWallets] = useState(() => getAvailableBitcoinWallets());
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState("");
 
   const appUrl = typeof window !== "undefined" ? window.location.href : "";
+
+  // Some mobile wallet browsers inject providers slightly after page load.
+  // Retry once shortly after mounting to give them time to appear.
+  React.useEffect(() => {
+    if (wallets.length === 0) {
+      const retry = window.setTimeout(() => setWallets(getAvailableBitcoinWallets()), 1200);
+      return () => window.clearTimeout(retry);
+    }
+  }, []);
 
   const copyDappLink = async () => {
     try {
@@ -53,23 +64,37 @@ export default function WalletSelector({ onConnected }) {
   };
 
   const openMobileWallet = (wallet, currentUrl) => {
-  const link = typeof wallet.deepLink === "function" 
-    ? wallet.deepLink(currentUrl) 
-    : wallet.deepLink;
+    // If we are already in a web3 browser, just try to connect immediately
+    if (window.ethereum || window.unisat || getProviders().length > 0) {
+      handleConnect(wallet.id);
+      return;
+    }
 
-  const timeoutId = window.setTimeout(() => {
-    window.location.href = wallet.store;
-  }, 1500);
+    const link = typeof wallet.deepLink === "function" 
+      ? wallet.deepLink(currentUrl) 
+      : wallet.deepLink;
 
-  // Clear timeout if the app actually opens (page loses focus)
-  window.addEventListener("blur", () => window.clearTimeout(timeoutId), { once: true });
+    // Only set the store timeout if we aren't sure we're in a wallet
+    const timeoutId = window.setTimeout(() => {
+      window.location.href = wallet.store;
+    }, 2500);
 
-  window.location.href = link;
-};
+    window.addEventListener("blur", () => window.clearTimeout(timeoutId), { once: true });
+    window.location.href = link;
+  };
 
   const handleConnect = async (id) => {
+    setError("");
+
     const data = await connectBitcoinWallet(id);
-    if (data) onConnected(data);
+    if (data) {
+      onConnected(data);
+      return;
+    }
+
+    setError(
+      "Unable to connect. Make sure you're opening this dapp inside your wallet's in-app browser (MetaMask / Trust / OKX) and try again."
+    );
   };
 
   return (
@@ -95,6 +120,7 @@ export default function WalletSelector({ onConnected }) {
         <p className="text-gray-400 text-sm mb-2">
           Open this dapp from inside your mobile wallet browser (MetaMask / Trust / OKX / etc.).
         </p>
+
         <div className="flex gap-2">
           <input
             className="flex-1 rounded-lg px-2 py-2 bg-gray-800 text-white text-xs"
@@ -112,6 +138,20 @@ export default function WalletSelector({ onConnected }) {
         <p className="text-gray-500 text-xs mt-2">
           Paste the link into your wallet's in-app browser to load this dapp.
         </p>
+
+        <div className="mt-4">
+          <button
+            className="w-full px-3 py-2 bg-orange-500 hover:bg-orange-400 text-dark rounded-lg text-sm"
+            onClick={() => handleConnect()}
+          >
+            Try connecting (wallet selector)
+          </button>
+          {error && (
+            <p className="text-red-400 text-xs mt-2">
+              {error}
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-2">
