@@ -2,7 +2,7 @@ name: 🚀 Deploy to GO54
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   web-deploy:
     name: 🎉 Deploy
@@ -22,4 +22,5 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: ${{ secrets.FTP_PATH }}  # Added as a secret
         local-dir: ./dist/  # Or ./dist/ if using Vite
