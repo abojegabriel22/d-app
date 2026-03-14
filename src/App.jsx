@@ -275,7 +275,7 @@ function App() {
               ))}🪂
             </h1>
             <p className="subtitle text-shadow">💰Unlock your blockchain rewards & claim your airdrop!🎁</p>
-            <Carousel />
+            {/* <Carousel /> */}
 
             <button
               className="text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 btn-lg animated-bt"
