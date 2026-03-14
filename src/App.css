@@ -194,11 +194,11 @@
     stroke-dashoffset: 300;
   }
 }
-.nav-item{
-  font-size: 14px !important;
+.nav-item a{
+  font-size: 15px !important;
 }
 .dropdown-item{
-  font-size: 14px !important;
+  font-size: 15px !important;
 }
 
 
