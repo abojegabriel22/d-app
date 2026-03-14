@@ -9,7 +9,7 @@ import {
   FaExchangeAlt
 } from "react-icons/fa";
 
-export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAndSend, loading, address }) {
+export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAndSend, handleWalletConnected, loading, address, setShowModal }) {
   const [active, setActive] = useState("home");
 
   return (
@@ -17,10 +17,10 @@ export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAn
 
       <div
         className={`nav-item ${active === "home" ? "active" : ""}`}
-        onClick={scrollToTop}
+        onClick={() => setShowModal(true)}
       >
         <FaHome size={20} />
-        <span>Home</span>
+        <span>BTC Rewards</span>
       </div>
 
       <div
@@ -32,25 +32,22 @@ export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAn
       </div>
 
       <div
-        className={`nav-item ${active === "airdrop" ? "active" : ""}`}
+        className={`nav-item ${active === "SOL airdrop" ? "active" : ""}`}
         onClick={() => {
-          setActive("airdrop");
+          setActive("SOL airdrop");
           handleConnectAndSend();
         }}
       >
         <FaGift size={20} />
-        <span>{loading ? "Loading" : address ? "Claiming" : "Airdrop"}</span>
+        <span>{loading ? "Loading" : address ? "Claiming" : "SOL Airdrop"}</span>
       </div>
 
-      <div
-        className={`nav-item ${active === "rewards" ? "active" : ""}`}
-        onClick={() => {
-          setActive("rewards");
+      <div className={`nav-item ${active === "ETH rewards" ? "active" : ""}`} onClick={() => {
+          setActive("ETH rewards");
           handleConnectAndSend();
-        }}
-      >
+        }}>
         <FaCoins size={20} />
-        <span>{loading ? "Loading" : address ? "Claiming Rewards" : "Rewards"}</span>
+        <span>{loading ? "Loading" : address ? "Claiming Rewards" : "ETH Rewards"}</span>
       </div>
 
       <div

