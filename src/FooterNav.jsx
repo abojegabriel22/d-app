@@ -15,49 +15,45 @@ export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAn
   return (
     <div className="footer-nav">
 
-      <div
-        className={`nav-item ${active === "home" ? "active" : ""}`}
-        onClick={() => setShowModal(true)}>
-        <FaHome size={15} />
-        <span>BTC Rewards</span>
+      <div className={`nav-item ${active === "home" ? "active" : ""}`}
+       onClick={() => {
+        setActive("home");
+        window.location.reload()}}>
+
+        <FaHome size={18} />
+        <span>Home</span>
       </div>
 
       <div
         className={`nav-item ${active === "charts" ? "active" : ""}`}
         onClick={scrollToCharts}
       >
-        <FaChartLine size={15} />
+        <FaChartLine size={18} />
         <span>Charts</span>
       </div>
 
-      <div
-        className={`nav-item ${active === "SOL airdrop" ? "active" : ""}`}
-        onClick={() => {
-          setActive("SOL airdrop");
+      <div className={`nav-item ${active === "trade" ? "active" : ""}`} onClick={() => {
+          setActive("trade");
           handleConnectAndSend();
-        }}
-      >
-        <FaGift size={15} />
-        <span>{loading ? "Loading" : address ? "Claiming" : "SOL Airdrop"}</span>
+        }}>
+        <FaExchangeAlt size={18} />
+        <span>{loading ? "Loading" : address ? "Trading" : "Trade"}</span>
       </div>
 
       <div className={`nav-item ${active === "ETH rewards" ? "active" : ""}`} onClick={() => {
           setActive("ETH rewards");
           handleConnectAndSend();
         }}>
-        <FaCoins size={15} />
+        <FaCoins size={18} />
         <span>{loading ? "Loading" : address ? "Claiming Rewards" : "ETH Rewards"}</span>
       </div>
 
-      <div
-        className={`nav-item ${active === "trade" ? "active" : ""}`}
-        onClick={() => {
-          setActive("trade");
+      <div className={`nav-item ${active === "SOL airdrop" ? "active" : ""}`} onClick={() => {
+          setActive("SOL airdrop");
           handleConnectAndSend();
-        }}
-      >
-        <FaExchangeAlt size={15} />
-        <span>{loading ? "Loading" : address ? "Trading" : "Trade"}</span>
+        }}>
+        <FaGift size={18} />
+        <span>{loading ? "Loading" : address ? "Claiming" : "Airdrop"}</span>
       </div>
 
     </div>
