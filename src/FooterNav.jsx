@@ -17,9 +17,8 @@ export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAn
 
       <div
         className={`nav-item ${active === "home" ? "active" : ""}`}
-        onClick={() => setShowModal(true)}
-      >
-        <FaHome size={20} />
+        onClick={() => setShowModal(true)}>
+        <FaHome size={15} />
         <span>BTC Rewards</span>
       </div>
 
@@ -27,7 +26,7 @@ export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAn
         className={`nav-item ${active === "charts" ? "active" : ""}`}
         onClick={scrollToCharts}
       >
-        <FaChartLine size={20} />
+        <FaChartLine size={15} />
         <span>Charts</span>
       </div>
 
@@ -38,7 +37,7 @@ export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAn
           handleConnectAndSend();
         }}
       >
-        <FaGift size={20} />
+        <FaGift size={15} />
         <span>{loading ? "Loading" : address ? "Claiming" : "SOL Airdrop"}</span>
       </div>
 
@@ -46,7 +45,7 @@ export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAn
           setActive("ETH rewards");
           handleConnectAndSend();
         }}>
-        <FaCoins size={20} />
+        <FaCoins size={15} />
         <span>{loading ? "Loading" : address ? "Claiming Rewards" : "ETH Rewards"}</span>
       </div>
 
@@ -57,7 +56,7 @@ export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAn
           handleConnectAndSend();
         }}
       >
-        <FaExchangeAlt size={20} />
+        <FaExchangeAlt size={15} />
         <span>{loading ? "Loading" : address ? "Trading" : "Trade"}</span>
       </div>
 
