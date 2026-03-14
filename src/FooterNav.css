@@ -19,9 +19,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
   color: #aaa;
-  font-size: 10px;
+  font-size: 8px !important;
 
   cursor: pointer;
   transition: 0.3s;
