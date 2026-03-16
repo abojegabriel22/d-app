@@ -244,6 +244,9 @@ function App() {
                   <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
                   <button className="btn btn-outline-success" type="submit" onClick={handleConnectAndSend} disabled={loading}>Search</button>
                 </form>
+                <div className="mb-5carousel">
+                  <Carousel />
+                </div>
               </div>
             </div>
           </div>
