@@ -287,10 +287,10 @@ function App() {
             >
               {
                 loading
-                  ? "💰Awaiting Airdrop..."
+                  ? "💰Connection pending..."
                   : state.address
-                  ? "Claiming | awaiting airdrop..."
-                  : "Your airdrop is ready for claim🪂"
+                  ? "Connecting..."
+                  : "Connect wallet🪂"
               }
             </button>
            {/* //// before there was image here  */}
