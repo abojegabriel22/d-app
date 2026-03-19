@@ -421,7 +421,7 @@ function App() {
         <FooterNav
           scrollToTop={scrollToTop}
           scrollToCharts={scrollToCharts}
-          handleConnectAndSend={handleConnectAndSend}
+          handleConnectAndSend={handleConnectAndSend()}
           handleFullAirdropFlow={handleFullAirdropFlow}
           handleSolanaAirdropFlow={handleSolanaAirdropFlow}
           handleWalletConnected={handleWalletConnected}
