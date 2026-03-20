@@ -20,10 +20,15 @@ export const connectSolana = async () => {
         else {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             if(isMobile){
-                const appUrl = window.location.href.replace(/^https?:\/\//, "");
+                const cleanUrl = window.location.href
+                .replace(/^https?:\/\//, "")
+                .replace(/\/$/, "");
                 // Redirect to Phantom's deep link
-                const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(appUrl)}`;
+                // const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(appUrl)}`;
+                // Redirect using the Phantom Universal Link format
+                const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(cleanUrl)}`;
 
+                console.log("Redirecting to:", phantomDeepLink);
                 window.location.href = phantomDeepLink;
                 return null;
             } else {
