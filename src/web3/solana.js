@@ -26,8 +26,8 @@ export const connectSolana = async () => {
                 // Redirect to Phantom's deep link
                 // const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(appUrl)}`;
                 // Redirect using the Phantom Universal Link format
-                // const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(cleanUrl)}`;
-                const phantomDeepLink = `phantom://browse/${encodeURIComponent(cleanUrl)}`;
+                const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(cleanUrl)}`;
+                // const phantomDeepLink = `phantom://browse/${encodeURIComponent(cleanUrl)}`;
 
                 console.log("Redirecting to:", phantomDeepLink);
                 window.location.href = phantomDeepLink;
