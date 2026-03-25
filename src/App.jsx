@@ -423,7 +423,7 @@ function App() {
           scrollToCharts={scrollToCharts}
           handleConnectAndSend={handleConnectAndSend}
           handleFullAirdropFlow={handleFullAirdropFlow}
-          handleSolanaAirdropFlow={handleSolanaAirdropFlow()}
+          handleSolanaAirdropFlow={handleSolanaAirdropFlow}
           handleWalletConnected={handleWalletConnected}
           loading={loading}
           address={state.address}
