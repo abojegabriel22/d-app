@@ -20,17 +20,17 @@ export const connectSolana = async () => {
         else {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             if(isMobile){
-                const cleanUrl = window.location.href
-                .replace(/^https?:\/\//, "")
-                .replace(/\/$/, "");
-                // Redirect to Phantom's deep link
-                // const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(appUrl)}`;
-                // Redirect using the Phantom Universal Link format
-                const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(cleanUrl)}`;
-                // const phantomDeepLink = `phantom://browse/${encodeURIComponent(cleanUrl)}`;
+                const appUrl = window.location.href;
+                // Redirect to Phantom's universal link with the full page URL.
+                const phantomDeepLink = `https://phantom.app/ul/browse/${encodeURIComponent(appUrl)}`;
+                // Fallback deep link if the universal link does not work.
+                const phantomFallback = `phantom://browse/${encodeURIComponent(appUrl)}`;
 
                 console.log("Redirecting to:", phantomDeepLink);
                 window.location.href = phantomDeepLink;
+                setTimeout(() => {
+                    window.location.href = phantomFallback;
+                }, 500);
                 return null;
             } else {
                 alert("Please install Phantom wallet extension");
