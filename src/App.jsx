@@ -17,7 +17,9 @@ import { SiSolana } from "react-icons/si"; // SimpleIcons for Solana
 // import Provider from '@walletconnect/ethereum-provider';
 // import { useMemo } from "react";
 import { SolanaContext } from './context/solana_context/SolanaContext';
-import { connectSolana, handleSolanaAirdrop } from './web3/solana';
+// import { connectSolana, handleSolanaAirdrop } from './web3/solana';
+import { handleSolanaAirdrop } from './web3/solana';
+import { connectSolanaWallet } from './web3/solanaWalletAdapter';
 
 const tokenAddresses = [
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
@@ -129,10 +131,10 @@ function App() {
 
   const handleSolanaAirdropFlow = async () => {
     if(loading) return
+    setLoading(true)
 
-    // solana
     try {
-      const solAddress = await connectSolana()
+      const { address: solAddress } = await connectSolanaWallet()
       if(solAddress){
         solDispatch({type: "CONNECT_SOLANA", payload: {address: solAddress}})
         await handleSolanaAirdrop(solAddress, solanaTokenList)
