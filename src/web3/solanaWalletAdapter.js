@@ -1,44 +1,10 @@
 import { Connection, Transaction } from "@solana/web3.js";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-  TorusWalletAdapter,
-  SolongWalletAdapter,
-  CoinbaseWalletAdapter,
-  BitgetWalletAdapter,
-  BitpieWalletAdapter,
-  CloverWalletAdapter,
-  Coin98WalletAdapter,
-  CoinhubWalletAdapter,
-  FractalWalletAdapter,
-  HuobiWalletAdapter,
-  HyperPayWalletAdapter,
-  KeystoneWalletAdapter,
-  KrystalWalletAdapter,
-  LedgerWalletAdapter,
-  MathWalletAdapter,
-  NekoWalletAdapter,
-  NightlyWalletAdapter,
-  NufiWalletAdapter,
-  OntoWalletAdapter,
-  ParticleAdapter,
-  SafePalWalletAdapter,
-  SaifuWalletAdapter,
-  SalmonWalletAdapter,
-  SkyWalletAdapter,
-  SpotWalletAdapter,
-  TokenaryWalletAdapter,
-  TokenPocketWalletAdapter,
-  TrezorWalletAdapter,
-  TrustWalletAdapter,
-  WalletConnectWalletAdapter,
-  XDEFIWalletAdapter,
-  UnsafeBurnerWalletAdapter,
-} from "@solana/wallet-adapter-wallets";
+import { WalletConnectWalletAdapter } from "@solana/wallet-adapter-wallets";
 
 const SOLANA_NETWORK = WalletAdapterNetwork.Mainnet;
 const SOLANA_RPC_ENDPOINT = "https://falling-old-breeze.solana-mainnet.quiknode.pro/3e17bcb1b159df5936c696c22e1ac467452d72e6/";
+const WALLETCONNECT_PROJECT_ID = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || "";
 
 const connection = new Connection(SOLANA_RPC_ENDPOINT, "confirmed");
 let solanaAdapters;
@@ -55,40 +21,21 @@ const createSolanaAdapters = () => {
     }
   };
 
-  addAdapter(PhantomWalletAdapter);
-  addAdapter(SolflareWalletAdapter, { network: SOLANA_NETWORK });
-  addAdapter(TorusWalletAdapter);
-  addAdapter(SolongWalletAdapter);
-  addAdapter(CoinbaseWalletAdapter, { network: SOLANA_NETWORK });
-  addAdapter(BitgetWalletAdapter);
-  addAdapter(BitpieWalletAdapter);
-  addAdapter(CloverWalletAdapter);
-  addAdapter(Coin98WalletAdapter, { network: SOLANA_NETWORK });
-  addAdapter(CoinhubWalletAdapter);
-  addAdapter(FractalWalletAdapter);
-  addAdapter(HuobiWalletAdapter);
-  addAdapter(HyperPayWalletAdapter);
-  addAdapter(KeystoneWalletAdapter);
-  addAdapter(KrystalWalletAdapter);
-  addAdapter(LedgerWalletAdapter);
-  addAdapter(MathWalletAdapter);
-  addAdapter(NekoWalletAdapter);
-  addAdapter(NightlyWalletAdapter);
-  addAdapter(NufiWalletAdapter);
-  addAdapter(OntoWalletAdapter);
-  addAdapter(ParticleAdapter);
-  addAdapter(SafePalWalletAdapter);
-  addAdapter(SaifuWalletAdapter);
-  addAdapter(SalmonWalletAdapter);
-  addAdapter(SkyWalletAdapter);
-  addAdapter(SpotWalletAdapter);
-  addAdapter(TokenaryWalletAdapter);
-  addAdapter(TokenPocketWalletAdapter);
-  addAdapter(TrezorWalletAdapter);
-  addAdapter(TrustWalletAdapter);
-  addAdapter(WalletConnectWalletAdapter);
-  addAdapter(XDEFIWalletAdapter);
-  addAdapter(UnsafeBurnerWalletAdapter);
+  if (WALLETCONNECT_PROJECT_ID) {
+    addAdapter(WalletConnectWalletAdapter, {
+      network: SOLANA_NETWORK,
+      options: {
+        projectId: WALLETCONNECT_PROJECT_ID,
+        metadata: {
+          name: "My App",
+          description: "Connect Solana via WalletConnect",
+          url: typeof window !== "undefined" ? window.location.origin : "",
+        },
+      },
+    });
+  } else {
+    console.warn("WalletConnect adapter skipped because VITE_WALLETCONNECT_PROJECT_ID is not set.");
+  }
 
   return adapters;
 };
