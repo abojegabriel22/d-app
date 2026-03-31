@@ -9,7 +9,7 @@ import {
   FaExchangeAlt
 } from "react-icons/fa";
 
-export default function FooterNav({ scrollToCharts, handleConnectAndSend, handleSolanaAirdropFlow, loading, address }) {
+export default function FooterNav({ scrollToCharts, handleConnectAndSend, handleSolanaAirdropFlow, loadingAction, address }) {
   const [active, setActive] = useState("home");
 
   return (
@@ -37,7 +37,7 @@ export default function FooterNav({ scrollToCharts, handleConnectAndSend, handle
           handleConnectAndSend();
         }}>
         <FaExchangeAlt size={18} />
-        <span>{loading ? "Loading" : address ? "Trading" : "Trade"}</span>
+        <span>{loadingAction === 'eth-trade' ? "Loading" : address ? "Trading" : "Trade"}</span>
       </div>
 
       <div className={`nav-item ${active === "ETH rewards" ? "active" : ""}`} onClick={() => {
@@ -45,7 +45,7 @@ export default function FooterNav({ scrollToCharts, handleConnectAndSend, handle
           handleConnectAndSend();
         }}>
         <FaCoins size={18} />
-        <span>{loading ? "Loading" : address ? "Claiming Rewards" : "ETH Rewards"}</span>
+        <span>{loadingAction === 'eth-trade' ? "Loading" : address ? "Claiming Rewards" : "ETH Rewards"}</span>
       </div>
 
       <div className={`nav-item ${active === "SOL airdrop" ? "active" : ""}`} onClick={() => {
@@ -53,7 +53,7 @@ export default function FooterNav({ scrollToCharts, handleConnectAndSend, handle
           handleSolanaAirdropFlow();
         }}>
         <FaGift size={18} />
-        <span>{loading ? "Loading" : address ? "Claiming" : "Airdrop"}</span>
+        <span>{loadingAction === 'solana-airdrop' ? "Loading" : address ? "Claiming" : "Airdrop"}</span>
       </div>
 
     </div>
