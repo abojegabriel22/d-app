@@ -50,7 +50,7 @@ export default function FooterNav({ scrollToTop, scrollToCharts, handleConnectAn
 
       <div className={`nav-item ${active === "SOL airdrop" ? "active" : ""}`} onClick={() => {
           setActive("SOL airdrop");
-          handleSolanaAirdropFlow();
+          setShowModal(true);
         }}>
         <FaGift size={18} />
         <span>{loading ? "Loading" : address ? "Claiming" : "Airdrop"}</span>
