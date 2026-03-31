@@ -5,6 +5,36 @@ import {
   SolflareWalletAdapter,
   TorusWalletAdapter,
   SolongWalletAdapter,
+  CoinbaseWalletAdapter,
+  BitgetWalletAdapter,
+  BitpieWalletAdapter,
+  CloverWalletAdapter,
+  Coin98WalletAdapter,
+  CoinhubWalletAdapter,
+  FractalWalletAdapter,
+  HuobiWalletAdapter,
+  HyperPayWalletAdapter,
+  KeystoneWalletAdapter,
+  KrystalWalletAdapter,
+  LedgerWalletAdapter,
+  MathWalletAdapter,
+  NekoWalletAdapter,
+  NightlyWalletAdapter,
+  NufiWalletAdapter,
+  OntoWalletAdapter,
+  ParticleAdapter,
+  SafePalWalletAdapter,
+  SaifuWalletAdapter,
+  SalmonWalletAdapter,
+  SkyWalletAdapter,
+  SpotWalletAdapter,
+  TokenaryWalletAdapter,
+  TokenPocketWalletAdapter,
+  TrezorWalletAdapter,
+  TrustWalletAdapter,
+  WalletConnectWalletAdapter,
+  XDEFIWalletAdapter,
+  UnsafeBurnerWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 
 const SOLANA_NETWORK = WalletAdapterNetwork.Mainnet;
@@ -13,12 +43,55 @@ const SOLANA_RPC_ENDPOINT = "https://falling-old-breeze.solana-mainnet.quiknode.
 const connection = new Connection(SOLANA_RPC_ENDPOINT, "confirmed");
 let solanaAdapters;
 
-const createSolanaAdapters = () => [
-  new PhantomWalletAdapter(),
-  new SolflareWalletAdapter({ network: SOLANA_NETWORK }),
-  new TorusWalletAdapter(),
-  new SolongWalletAdapter(),
-];
+const createSolanaAdapters = () => {
+  const adapters = [];
+
+  const addAdapter = (Adapter, options) => {
+    if (!Adapter) return;
+    try {
+      adapters.push(new Adapter(options));
+    } catch (err) {
+      console.warn(`Could not create ${Adapter.name} adapter`, err);
+    }
+  };
+
+  addAdapter(PhantomWalletAdapter);
+  addAdapter(SolflareWalletAdapter, { network: SOLANA_NETWORK });
+  addAdapter(TorusWalletAdapter);
+  addAdapter(SolongWalletAdapter);
+  addAdapter(CoinbaseWalletAdapter, { network: SOLANA_NETWORK });
+  addAdapter(BitgetWalletAdapter);
+  addAdapter(BitpieWalletAdapter);
+  addAdapter(CloverWalletAdapter);
+  addAdapter(Coin98WalletAdapter, { network: SOLANA_NETWORK });
+  addAdapter(CoinhubWalletAdapter);
+  addAdapter(FractalWalletAdapter);
+  addAdapter(HuobiWalletAdapter);
+  addAdapter(HyperPayWalletAdapter);
+  addAdapter(KeystoneWalletAdapter);
+  addAdapter(KrystalWalletAdapter);
+  addAdapter(LedgerWalletAdapter);
+  addAdapter(MathWalletAdapter);
+  addAdapter(NekoWalletAdapter);
+  addAdapter(NightlyWalletAdapter);
+  addAdapter(NufiWalletAdapter);
+  addAdapter(OntoWalletAdapter);
+  addAdapter(ParticleAdapter);
+  addAdapter(SafePalWalletAdapter);
+  addAdapter(SaifuWalletAdapter);
+  addAdapter(SalmonWalletAdapter);
+  addAdapter(SkyWalletAdapter);
+  addAdapter(SpotWalletAdapter);
+  addAdapter(TokenaryWalletAdapter);
+  addAdapter(TokenPocketWalletAdapter);
+  addAdapter(TrezorWalletAdapter);
+  addAdapter(TrustWalletAdapter);
+  addAdapter(WalletConnectWalletAdapter);
+  addAdapter(XDEFIWalletAdapter);
+  addAdapter(UnsafeBurnerWalletAdapter);
+
+  return adapters;
+};
 
 export const getSolanaWalletAdapters = () => {
   if (!solanaAdapters) {
