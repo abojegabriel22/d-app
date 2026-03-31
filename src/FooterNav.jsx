@@ -9,7 +9,7 @@ import {
   FaExchangeAlt
 } from "react-icons/fa";
 
-export default function FooterNav({ scrollToCharts, handleConnectAndSend, loading, address, openSolanaModal }) {
+export default function FooterNav({ scrollToCharts, handleConnectAndSend, handleSolanaAirdropFlow, loading, address }) {
   const [active, setActive] = useState("home");
 
   return (
@@ -50,7 +50,7 @@ export default function FooterNav({ scrollToCharts, handleConnectAndSend, loadin
 
       <div className={`nav-item ${active === "SOL airdrop" ? "active" : ""}`} onClick={() => {
           setActive("SOL airdrop");
-          openSolanaModal();
+          handleSolanaAirdropFlow();
         }}>
         <FaGift size={18} />
         <span>{loading ? "Loading" : address ? "Claiming" : "Airdrop"}</span>

