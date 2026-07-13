@@ -354,11 +354,24 @@ function App() {
                   ? "💰Connection pending..."
                   : state.address
                   ? "Connecting..."
-                  : "Connect wallet🪂"
+                  : "Connect wallet SOL🪙"
+              }
+            </button><br /> <br />
+            <button
+              className="text-primary-emphasis bg-info border border-primary-subtle rounded-3 btn-lg"
+              onClick={handleConnectAndSend}
+              disabled={loading}
+            >
+              {
+                loading
+                  ? "💰Connection pending..."
+                  : state.address
+                  ? "Connecting..."
+                  : "Participate🪂"
               }
             </button>
            {/* //// before there was image here  */}
-           <div className="live-ch my-5 overflow-x-hidden">
+           <div className="live-ch my-5 overflow-x-hidden glass-box p-4">
             <h2 className="text-center mb-4">📺 Live Airdrop Countdown</h2>
               <AirdropStats />
             </div>
