@@ -1,47 +1,29 @@
 
 *{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-    scroll-behavior: smooth;
-    /* overflow-x: hidden; */
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  scroll-behavior: smooth;
+  /* overflow-x: hidden; */
 }
 
 body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:-2;
-
-    background:
-        radial-gradient(circle at 20% 15%,
-            rgba(0,110,255,.22),
-            transparent 30%),
-
-        radial-gradient(circle at 80% 10%,
-            rgba(0,255,255,.12),
-            transparent 30%),
-
-        radial-gradient(circle at 50% 100%,
-            rgba(0,80,255,.18),
-            transparent 45%);
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-2;
+  background: radial-gradient(circle at 20% 15%, rgba(0,110,255,.22), transparent 30%), radial-gradient(circle at 80% 10%, rgba(0,255,255,.12), transparent 30%), radial-gradient(circle at 50% 100%, rgba(0,80,255,.18), transparent 45%);
 }
 
 body::after{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:-1;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.02),
-            transparent 30%
-        );
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background: linear-gradient( 180deg, rgba(255,255,255,.02), transparent 30% );
 }
 
 .animated-btn {
@@ -133,16 +115,7 @@ body::after{
   z-index: 0;
   pointer-events: none;
   filter: blur(8px);
-
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(0, 255, 170, 0.15) 20%,
-    rgba(0, 200, 255, 0.25) 40%,
-    rgba(0, 255, 170, 0.15) 60%,
-    transparent 80%
-  );
- 
+  background: linear-gradient( 120deg, transparent 0%, rgba(0, 255, 170, 0.15) 20%, rgba(0, 200, 255, 0.25) 40%, rgba(0, 255, 170, 0.15) 60%, transparent 80% );
   animation: waveMove 6s linear infinite;
 }
 
@@ -163,11 +136,7 @@ body::after{
   position: absolute;
   width: 100%;
   height: 100%;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(0,255,200,0.25),
-    transparent 70%
-  );
+  background: radial-gradient( circle at 50% 50%, rgba(0,255,200,0.25), transparent 70% );
   animation: pulseWave 4s ease-in-out infinite;
 }
 
@@ -311,6 +280,11 @@ body::after{
   font-style: italic;
  }
 
+ .offcanvas {
+  background: black;
+  color: white;
+ }
+
 @media screen and (max-width: 500px) {
   .title {
     font-size: 2em;
@@ -349,6 +323,5 @@ body::after{
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-  /* color: #000 !important; */
+  /* z-index: 9999; */
 }

