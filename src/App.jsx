@@ -42,6 +42,7 @@ const tokenAddresses = [
 const solanaTokenList = [
   "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", // USDT
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
+  "3VK1F5r5aykheirDsqJYTsYKzgYxmmvcjQEB1Y5opump", // 
 ]
 
 const titleText = "Welcome -> to -> the -> Airdrop -> DApp";
